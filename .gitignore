@@ -134,6 +134,7 @@
 # SonarLint plugin
 **/.idea/sonarlint/
 **/.sonarlint/
+**/.idea/sonarlint*.*
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 **/com_crashlytics_export_strings.xml
