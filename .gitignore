@@ -285,3 +285,6 @@ $RECYCLE.BIN/
 
 !easygraphics.jar
 !easygraphics-jdk10.jar
+
+# DAT107-OBLIG3
+**/ServerSetup.java
