@@ -83,6 +83,18 @@ public class Main {
 	}
 
 	private static void sokMedAnsattId() {
-	}
+
+        System.out.print("Skriv inn ansattnummer : ");
+        String skrivInn = scanner.nextLine();
+        try {
+            int skrivInnInt = Integer.parseInt(skrivInn) ;
+
+            System.out.println(ansattDAO.finnAnsattMedAnsattID(skrivInnInt));
+            System.out.println();
+
+        } catch (NumberFormatException e) {
+            System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
+        }
+    }
 
 }
