@@ -60,17 +60,17 @@ public class Main {
 
 	private static void sokMedBrukernavn() {
 		System.out.println(
-				"Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte");
+				"Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte ansattsøk");
 
 		while (true) {
 			System.out.print("Skriv inn et brukernavn: ");
 			String userinput = scanner.nextLine();
 			while (userinput.length() < 3 || userinput.length() > 5) {
 				if (userinput.length() == 0) {
-					System.out.println("Avbrutt av bruker");
-					System.exit(0);
+					System.out.println("Avbrutt ansatt søk fra bruker");
+					return;
 				}
-				System.out.print("Brukernavn er på mellom 3 og 5 tegn, prøv igjen: ");
+				System.out.print("Brukernavn er på mellom 4 og 5 tegn, prøv igjen: ");
 				userinput = scanner.nextLine();
 			}
 			Ansatt a = ansattDAO.finnAnsattMedBrukernavn(userinput);
