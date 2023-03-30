@@ -11,19 +11,23 @@ import java.time.LocalDate;
 public class Ansatt {
 
 	@Id
-	private int       ansattid;
-	private String    brukernavn;
-	private String    fornavn;
-	private String    etternavn;
+	private int ansattid;
+	private String brukernavn;
+	private String fornavn;
+	private String etternavn;
 	private LocalDate ansettelsesdato;
-	private String    stilling;
-	private int       maanedslonn;
+	private String stilling;
+	private int maanedslonn;
+
+//	Ansatt + id + brukernavn
+//		Fornavn etternavn
+//		dato 
+//		stilling og lønn
 
 	@Override
 	public String toString() {
-		return "Ansatt{" + "ansattid=" + ansattid + ", brukernavn=" + brukernavn + ", fornavn=" + fornavn +
-		       ", etternavn=" + etternavn + ", ansettelsesdato=" + ansettelsesdato + ", stilling=" +
-		       stilling + ", maanedslonn=" + maanedslonn + '}';
+		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + ansattid + "\n\tBrukernavn:\t" + brukernavn + "\n\t" + "Ansettelsdato:\t"
+				+ ansettelsesdato + "\n\t" + "Stiling:\t" + stilling + "\n\tMånedslønn:\t" + maanedslonn;
 	}
 
 	public void setStilling(String stilling) {
