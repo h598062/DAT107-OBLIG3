@@ -11,7 +11,6 @@ import java.util.Date;
 public class Ansatt {
 
 	@Id
-	private int    ansattid;
 	private String brukernavn;
 	private String fornavn;
 	private String etternavn;
@@ -21,7 +20,39 @@ public class Ansatt {
 
 	@Override
 	public String toString() {
-		return "Ansatt{" + "ansattid=" + ansattid + ", brukernavn=" + brukernavn + ", fornavn=" + fornavn + ", etternavn=" + etternavn + ", ansettelsesdato=" + ansettelsesdato +
+		return "Ansatt{" + "brukernavn=" + brukernavn + ", fornavn=" + fornavn + ", etternavn=" + etternavn + ", ansettelsesdato=" + ansettelsesdato +
 		       ", stilling=" + stilling + ", maanedslonn=" + maanedslonn + '}';
+	}
+
+	public void setStilling(String stilling) {
+		this.stilling = stilling;
+	}
+
+	public void setMaanedslonn(int maanedslonn) {
+		this.maanedslonn = maanedslonn;
+	}
+
+	public String getBrukernavn() {
+		return brukernavn;
+	}
+
+	public String getFornavn() {
+		return fornavn;
+	}
+
+	public String getEtternavn() {
+		return etternavn;
+	}
+
+	public Date getAnsettelsesdato() {
+		return ansettelsesdato;
+	}
+
+	public String getStilling() {
+		return stilling;
+	}
+
+	public int getMaanedslonn() {
+		return maanedslonn;
 	}
 }
