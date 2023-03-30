@@ -15,13 +15,13 @@ public class Main {
 		while (true) {
 			System.out.println("Hva ønsker du å søke etter?");
 			System.out.println("""
-			                            0. - Avslutt
+			                   0. - Avslutt
 			                   1. - Søke etter ansatt på ansatt-id
 			                   2. - Søke etter ansatt på brukernavn (initialer)
 			                   3. - Utlisting av alle ansatte
 			                   4. - Oppdatere en ansatt sin stilling og/eller lønn
 			                   5. - Legge inn en ny ansatt""");
-
+			System.out.print("Skriv inn et tall fra 0-5: ");
 			String valg = scanner.nextLine();
 
 			try {
