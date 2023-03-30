@@ -1,5 +1,6 @@
 package no.hvl.dat107;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -54,6 +55,12 @@ public class Main {
 	}
 
 	private static void skrivUtAlleAnsatte() {
+		List<Ansatt> al = ansattDAO.finnAlleAnsatte();
+		System.out.println("Liste over alle ansatte: ");
+		for (Ansatt a : al) {
+			System.out.println(a);
+		}
+		System.out.println();
 	}
 
 	private static void sokMedBrukernavn() {
