@@ -44,6 +44,8 @@ public class AnsattDAO {
 			String             ql = "select a from Ansatt as a where a.brukernavn = '" + brukernavn + "'";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
 		}
 	}
 
@@ -110,5 +112,21 @@ public class AnsattDAO {
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
+	}
+
+	public Ansatt oppdaterLonn(int nyLonn) {
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		Ansatt oppdatertAnsatt =  null;
+		try {
+			tx.begin();
+
+			tx.commit();
+		} catch (Exception e) {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
+		return oppdatertAnsatt;
 	}
 }
