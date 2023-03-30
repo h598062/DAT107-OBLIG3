@@ -11,6 +11,7 @@ import java.util.Date;
 public class Ansatt {
 
 	@Id
+	private int    ansattid;
 	private String brukernavn;
 	private String fornavn;
 	private String etternavn;
@@ -20,7 +21,7 @@ public class Ansatt {
 
 	@Override
 	public String toString() {
-		return "Ansatt{" + "brukernavn=" + brukernavn + ", fornavn=" + fornavn + ", etternavn=" + etternavn + ", ansettelsesdato=" + ansettelsesdato +
+		return "Ansatt{" + "ansattid=" + ansattid + ", brukernavn=" + brukernavn + ", fornavn=" + fornavn + ", etternavn=" + etternavn + ", ansettelsesdato=" + ansettelsesdato +
 		       ", stilling=" + stilling + ", maanedslonn=" + maanedslonn + '}';
 	}
 
