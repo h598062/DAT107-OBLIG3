@@ -1,10 +1,11 @@
 package no.hvl.dat107;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-	private static final Scanner   scanner   = new Scanner(System.in);
+	private static final Scanner scanner = new Scanner(System.in);
 	private static final AnsattDAO ansattDAO = new AnsattDAO();
 
 	public static void main(String[] args) {
@@ -14,31 +15,31 @@ public class Main {
 		while (true) {
 			System.out.println("Hva ønsker du å søke etter?");
 			System.out.println("""
-			                   0. - Avslutt
-			                   1. - Søke etter ansatt på ansatt-id
-			                   2. - Søke etter ansatt på brukernavn (initialer)
-			                   3. - Utlisting av alle ansatte
-			                   4. - Oppdatere en ansatt sin stilling og/eller lønn
-			                   5. - Legge inn en ny ansatt""");
+					0. - Avslutt
+					1. - Søke etter ansatt på ansatt-id
+					2. - Søke etter ansatt på brukernavn (initialer)
+					3. - Utlisting av alle ansatte
+					4. - Oppdatere en ansatt sin stilling og/eller lønn
+					5. - Legge inn en ny ansatt""");
 			System.out.print("Skriv inn et tall fra 0-5: ");
 			String valg = scanner.nextLine();
 
 			try {
 				int valgInt = Integer.parseInt(valg);
 				switch (valgInt) {
-					case 0 -> avslutt();
-					case 1 -> sokMedAnsattId();
-					case 2 -> sokMedBrukernavn();
-					case 3 -> skrivUtAlleAnsatte();
-					case 4 -> oppdatereEnAnsattSinStillingEllerLonn();
-					case 5 -> leggeTilNyAnsatt();
-					default -> {
-						System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
-					}
+				case 0 -> avslutt();
+				case 1 -> sokMedAnsattId();
+				case 2 -> sokMedBrukernavn();
+				case 3 -> skrivUtAlleAnsatte();
+				case 4 -> oppdatereEnAnsattSinStillingEllerLonn();
+				case 5 -> leggeTilNyAnsatt();
+				default -> {
+					System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
+				}
 				}
 			} catch (NumberFormatException e) {
-				System.out.println("Input " + valg +
-				                   " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
+				System.out.println(
+						"Input " + valg + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
 			}
 		}
 	}
@@ -49,6 +50,35 @@ public class Main {
 	}
 
 	private static void leggeTilNyAnsatt() {
+		System.out
+				.println("Dette er en veiviser for å opprette en ny bruker," + " skriv opplysningene du får fra 1881!");
+		System.out.print("Skriv inn Fornavn: ");
+		String fornavn = scanner.nextLine();
+
+		System.out.print("Skriv inn Etternavn: ");
+		String etternavn = scanner.nextLine();
+
+		System.out.print("Skriv inn ansettelsesdato: ");
+		String ansettelsesdato = scanner.nextLine();
+
+		System.out.print("Skriv inn stilling: ");
+		String stilling = scanner.nextLine();
+
+		System.out.print("Skriv inn månedslønn: ");
+		String lonn = scanner.nextLine();
+		int lonnint;
+		try {
+			lonnint = Integer.parseInt(lonn);
+		} catch (NumberFormatException e) {
+			System.out.println(
+					"Input " + lonn + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
+			leggeTilNyAnsatt();
+			return;
+		}
+
+//		TODO 
+//		Sjekke om inputs er gyldig 
+
 	}
 
 	private static void oppdatereEnAnsattSinStillingEllerLonn() {
@@ -89,17 +119,17 @@ public class Main {
 
 	private static void sokMedAnsattId() {
 
-        System.out.print("Skriv inn ansattnummer : ");
-        String skrivInn = scanner.nextLine();
-        try {
-            int skrivInnInt = Integer.parseInt(skrivInn) ;
+		System.out.print("Skriv inn ansattnummer : ");
+		String skrivInn = scanner.nextLine();
+		try {
+			int skrivInnInt = Integer.parseInt(skrivInn);
 
-            System.out.println(ansattDAO.finnAnsattMedAnsattID(skrivInnInt));
-            System.out.println();
+			System.out.println(ansattDAO.finnAnsattMedAnsattID(skrivInnInt));
+			System.out.println();
 
-        } catch (NumberFormatException e) {
-            System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
-        }
-    }
+		} catch (NumberFormatException e) {
+			System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
+		}
+	}
 
 }
