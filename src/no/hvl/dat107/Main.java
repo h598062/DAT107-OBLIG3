@@ -7,8 +7,6 @@ public class Main {
 	private static final AnsattDAO ansattDAO = new AnsattDAO();
 
 	public static void main(String[] args) {
-		System.out.println("Hello World!");
-		System.out.println(ansattDAO.finnAnsattMedAnsattID(1));
 
 		System.out.println("Dette programmet lar deg lete etter ansatte i databasen");
 
