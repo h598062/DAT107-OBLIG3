@@ -82,6 +82,7 @@ public class Main {
 	}
 
 	private static void oppdatereEnAnsattSinStillingEllerLonn() {
+		// TODO implementere oppdaterStilling og oppdaterLonn inn i main program
 	}
 
 	private static void skrivUtAlleAnsatte() {

@@ -22,6 +22,7 @@ public class AnsattDAO {
 
 	/**
 	 * Returnerer en List med alle rader i tabellen
+	 *
 	 * @return List med alle Ansatt i tabell
 	 */
 	public List<Ansatt> finnAlleAnsatte() {
@@ -35,7 +36,9 @@ public class AnsattDAO {
 
 	/**
 	 * Returnerer Ansatt med oppgitt brukernavn
+	 *
 	 * @param brukernavn brukernavn til ansatt
+	 *
 	 * @return Ansatt
 	 */
 	public Ansatt finnAnsattMedBrukernavn(String brukernavn) {
@@ -50,14 +53,14 @@ public class AnsattDAO {
 	}
 
 	/**
-	 *
 	 * @param fornavn
+	 *
 	 * @return
 	 */
 	public Ansatt finnAnsattMedFornavn(String fornavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String           ql = "select a from Ansatt as a where a.fornavn = '" + fornavn + "'";
+			String             ql = "select a from Ansatt as a where a.fornavn = '" + fornavn + "'";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getSingleResult();
 		} catch (NoResultException e) {
@@ -68,7 +71,8 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedFornavn(String fornavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String           ql = "select a from Ansatt as a where a.fornavn = '" + fornavn + "' order by a.fornavn";
+			String             ql = "select a from Ansatt as a where a.fornavn = '" + fornavn +
+			                        "' order by a.fornavn";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
@@ -77,7 +81,7 @@ public class AnsattDAO {
 	public Ansatt finnAnsattMedEtternavn(String etternavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String           ql = "select a from Ansatt as a where a.etternavn = '" + etternavn + "'";
+			String             ql = "select a from Ansatt as a where a.etternavn = '" + etternavn + "'";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getSingleResult();
 		} catch (NoResultException e) {
@@ -88,7 +92,8 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedEtternavn(String etternavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String           ql = "select a from Ansatt as a where a.etternavn = '" + etternavn + "' order by a.etternavn";
+			String             ql = "select a from Ansatt as a where a.etternavn = '" + etternavn +
+			                        "' order by a.etternavn";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
@@ -97,7 +102,7 @@ public class AnsattDAO {
 	public Ansatt finnAnsattMedStilling(String stilling) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String           ql = "select a from Ansatt as a where a.stilling = '" + stilling + "'";
+			String             ql = "select a from Ansatt as a where a.stilling = '" + stilling + "'";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getSingleResult();
 		} catch (NoResultException e) {
@@ -108,24 +113,46 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedStilling(String stilling) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String           ql = "select a from Ansatt as a where a.stilling = '" + stilling + "' order by a.stilling";
+			String             ql = "select a from Ansatt as a where a.stilling = '" + stilling +
+			                        "' order by a.stilling";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
 	}
 
-	public Ansatt oppdaterLonn(int nyLonn) {
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		Ansatt oppdatertAnsatt =  null;
+	public Ansatt oppdaterLonn(int id, int nyLonn) {
+		EntityManager     em              = emf.createEntityManager();
+		EntityTransaction tx              = em.getTransaction();
+		Ansatt            oppdatertAnsatt = null;
 		try {
 			tx.begin();
-
+			oppdatertAnsatt = em.find(Ansatt.class, id); // Finne rad som skal oppdateres
+			oppdatertAnsatt.setMaanedslonn(nyLonn); // Oppdatere managed oject a => sync med database
 			tx.commit();
+
 		} catch (Exception e) {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			em.close();
+		}
+		return oppdatertAnsatt;
+	}
+	public Ansatt oppdaterStilling(int id, String nyStilling) {
+		EntityManager     em              = emf.createEntityManager();
+		EntityTransaction tx              = em.getTransaction();
+		Ansatt            oppdatertAnsatt = null;
+		try {
+			tx.begin();
+			oppdatertAnsatt = em.find(Ansatt.class, id); // Finne rad som skal oppdateres
+			oppdatertAnsatt.setStilling(nyStilling); // Oppdatere managed oject a => sync med database
+			tx.commit();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			em.close();
 		}
 		return oppdatertAnsatt;
 	}
