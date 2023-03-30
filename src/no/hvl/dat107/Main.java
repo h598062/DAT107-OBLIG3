@@ -3,14 +3,64 @@ package no.hvl.dat107;
 import java.util.Scanner;
 
 public class Main {
+	private static final Scanner   scanner   = new Scanner(System.in);
+	private static final AnsattDAO ansattDAO = new AnsattDAO();
+
 	public static void main(String[] args) {
 		System.out.println("Hello World!");
-		AnsattDAO ansattDAO = new AnsattDAO();
 		System.out.println(ansattDAO.finnAnsattMedAnsattID(1));
 
 		System.out.println("Dette programmet lar deg lete etter ansatte i databasen");
-		System.out.println("Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte");
-		Scanner scanner = new Scanner(System.in);
+
+		while (true) {
+			System.out.println("Hva ønsker du å søke etter?");
+			System.out.println("""
+			                            0. - Avslutt
+			                   1. - Søke etter ansatt på ansatt-id
+			                   2. - Søke etter ansatt på brukernavn (initialer)
+			                   3. - Utlisting av alle ansatte
+			                   4. - Oppdatere en ansatt sin stilling og/eller lønn
+			                   5. - Legge inn en ny ansatt""");
+
+			String valg = scanner.nextLine();
+
+			try {
+				int valgInt = Integer.parseInt(valg);
+				switch (valgInt) {
+					case 0 -> avslutt();
+					case 1 -> sokMedAnsattId();
+					case 2 -> sokMedBrukernavn();
+					case 3 -> skrivUtAlleAnsatte();
+					case 4 -> oppdatereEnAnsattSinStillingEllerLonn();
+					case 5 -> leggeTilNyAnsatt();
+					default -> {
+						System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
+					}
+				}
+			} catch (NumberFormatException e) {
+				System.out.println("Input " + valg +
+				                   " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
+			}
+		}
+	}
+
+	private static void avslutt() {
+		System.out.println("Avbrutt av bruker");
+		System.exit(0);
+	}
+
+	private static void leggeTilNyAnsatt() {
+	}
+
+	private static void oppdatereEnAnsattSinStillingEllerLonn() {
+	}
+
+	private static void skrivUtAlleAnsatte() {
+	}
+
+	private static void sokMedBrukernavn() {
+		System.out.println(
+				"Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte");
 
 		while (true) {
 			System.out.print("Skriv inn et brukernavn: ");
@@ -30,6 +80,9 @@ public class Main {
 				System.out.println("Fant ingen brukere med brukernavn: " + userinput);
 			}
 		}
+	}
+
+	private static void sokMedAnsattId() {
 	}
 
 }
