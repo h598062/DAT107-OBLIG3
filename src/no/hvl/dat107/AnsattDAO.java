@@ -41,7 +41,9 @@ public class AnsattDAO {
 	public Ansatt finnAnsattMedBrukernavn(String brukernavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			return em.find(Ansatt.class, brukernavn);
+			String             ql = "select a from Ansatt as a where a.brukernavn = '" + brukernavn + "'";
+			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
+			return q.getSingleResult();
 		}
 	}
 

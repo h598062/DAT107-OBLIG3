@@ -4,19 +4,19 @@ SET search_path TO OBLIG3;
 
 CREATE TABLE Ansatt
 (
-    ansattid        INT,
-    brukernavn      VARCHAR(4),
-    fornavn         VARCHAR(20),
-    etternavn       VARCHAR(30),
-    ansettelsesdato DATE,
-    stilling        VARCHAR(20),
-    maanedslonn     INT
+    ansattid        SERIAL PRIMARY KEY,
+    brukernavn      VARCHAR(4) UNIQUE NOT NULL,
+    fornavn         VARCHAR(20) NOT NULL,
+    etternavn       VARCHAR(30) NOT NULL,
+    ansettelsesdato DATE NOT NULL,
+    stilling        VARCHAR(20) NOT NULL,
+    maanedslonn     INT NOT NULL
 );
 
 INSERT INTO
-  Ansatt(ansattid, brukernavn, fornavn, etternavn, ansettelsesdato, stilling, maanedslonn)
+  Ansatt(brukernavn, fornavn, etternavn, ansettelsesdato, stilling, maanedslonn)
 VALUES
-    (1, 'bjhe', 'Bjørnar', 'Helgeland', '2021-08-15', 'code-monkey', 30000),
-    (2, 'krbe', 'Kristian', 'Bell', '2021-08-15', 'maskot', 25000),
-    (3, 'stsa', 'Storm', 'Sangolt', '2021-08-15', '"var tilstede"', 50000);
+    ('bjhe', 'Bjørnar', 'Helgeland', '2021-08-15', 'code-monkey', 30000),
+    ('krbe', 'Kristian', 'Bell', '2021-08-15', 'maskot', 25000),
+    ('stsa', 'Storm', 'Sangolt', '2021-08-15', '"var tilstede"', 50000);
 SELECT * FROM Ansatt;
