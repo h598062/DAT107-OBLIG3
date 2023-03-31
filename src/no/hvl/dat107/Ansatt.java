@@ -1,9 +1,8 @@
 package no.hvl.dat107;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 
 @Entity
@@ -11,6 +10,7 @@ import java.time.LocalDate;
 public class Ansatt {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int       ansattid;
 	private String    brukernavn;
 	private String    fornavn;
@@ -28,8 +28,7 @@ public class Ansatt {
 	public Ansatt() {
 	}
 
-	public Ansatt(String brukernavn, String fornavn, String etternavn, LocalDate ansettelsesdato,
-	              String stilling, int maanedslonn) {
+	public Ansatt(String brukernavn, String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn) {
 		this.brukernavn      = brukernavn;
 		this.fornavn         = fornavn;
 		this.etternavn       = etternavn;
@@ -38,11 +37,65 @@ public class Ansatt {
 		this.maanedslonn     = maanedslonn;
 	}
 
+	/**
+	 * Konstruktør som automatisk genererer brukernavn
+	 * @param fornavn Fornavn
+	 * @param etternavn Etternavn
+	 * @param ansettelsesdato Ansettelsesdato
+	 * @param stilling Stilling
+	 * @param maanedslonn Lønn
+	 */
+	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn) {
+		this.brukernavn      = genererBrukernavn(fornavn, etternavn);
+		this.fornavn         = fornavn;
+		this.etternavn       = etternavn;
+		this.ansettelsesdato = ansettelsesdato;
+		this.stilling        = stilling;
+		this.maanedslonn     = maanedslonn;
+	}
+
+	public void setBrukernavn(String brukernavn) {
+		this.brukernavn = brukernavn;
+	}
+
+	/**
+	 * Intern metode for å generere et brukernavn på 4 tegn.
+	 *
+	 * @param fornavn   Fornavn
+	 * @param etternavn Etternavn
+	 *
+	 * @return Brukernavn på 4 tegn
+	 */
+	private String genererBrukernavn(String fornavn, String etternavn) {
+		StringBuilder nyttBrukernavn = new StringBuilder();
+		if (fornavn == null) {
+			throw new InvalidParameterException("Fornavn kan ikke være null");
+		}
+		if (etternavn == null) {
+			throw new InvalidParameterException("Etternavn kan ikke være null");
+		}
+		switch (fornavn.length()) {
+			case 0 -> throw new InvalidParameterException("Fornavn må være på minst ett tegn");
+
+			case 1 -> nyttBrukernavn.append(fornavn.charAt(0)).append("x");
+
+			default -> nyttBrukernavn.append(fornavn.charAt(0)).append(fornavn.charAt(1));
+		}
+		switch (etternavn.length()) {
+			case 0 -> throw new InvalidParameterException("Etternavn må være på minst ett tegn");
+
+			case 1 -> nyttBrukernavn.append(fornavn.charAt(0)).append("x");
+
+			default -> nyttBrukernavn.append(fornavn.charAt(0)).append(fornavn.charAt(1));
+		}
+		return nyttBrukernavn.toString();
+	}
+
+
 	@Override
 	public String toString() {
-		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + ansattid + "\n\tBrukernavn:\t" + brukernavn +
-		       "\n\t" + "Ansettelsdato:\t" + ansettelsesdato + "\n\t" + "Stiling:\t" + stilling +
-		       "\n\tMånedslønn:\t" + maanedslonn;
+		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + ansattid + "\n\tBrukernavn:\t" + brukernavn + "\n\t" + "Ansettelsdato:\t" +
+		       ansettelsesdato + "\n\t" + "Stiling:\t" + stilling + "\n\tMånedslønn:\t" + maanedslonn;
 	}
 
 	public void setStilling(String stilling) {

@@ -80,10 +80,10 @@ public class Main {
 		boolean alleGyldig = false;
 		
 //		Kanskje legge til bedre feilmelding / catch?
-		if (fornavn.length() < 20 && fornavn.length() > 0) {
-			if (etternavn.length() < 30 && etternavn.length() > 0) {
+		if (fornavn.length() <= 20 && fornavn.length() > 0) {
+			if (etternavn.length() <= 30 && etternavn.length() > 0) {
 				if (erValid(ansettelsesdato)) {
-					if (stilling.length() < 20 && stilling.length() > 0) {
+					if (stilling.length() <= 20 && stilling.length() > 0) {
 						if (lonnint > 0) {
 							alleGyldig = true;
 							System.out.println("Alle inputs er gyldig!");
@@ -106,7 +106,7 @@ public class Main {
 //		Sender ny ansatt til metode i AnsattDAO for å bli opprettet
 		if (alleGyldig) {
 //			Må lage auto generert id og brukernavn
-			Ansatt nyAnsatt = new Ansatt();
+			Ansatt nyAnsatt = new Ansatt(fornavn, etternavn, LocalDate.parse(ansettelsesdato), stilling,  lonnint);
 			// Legg til en ansatt med riktige parameter
 			ansattDAO.leggTilNyAnsatt(nyAnsatt);
 		}

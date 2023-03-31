@@ -1,7 +1,10 @@
 package no.hvl.dat107;
 
 import jakarta.persistence.*;
+import org.checkerframework.checker.units.qual.A;
 
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -52,6 +55,14 @@ public class AnsattDAO {
 		}
 	}
 
+	public List<Ansatt> finnAnsatteMedBrukernavn(String brukernavn) {
+		try (EntityManager em = emf.createEntityManager()) {
+			String             ql = "select a from Ansatt as a where a.brukernavn = '" + brukernavn + "'";
+			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
+			return q.getResultList();
+		}
+	}
+
 	/**
 	 * @param fornavn
 	 *
@@ -71,8 +82,7 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedFornavn(String fornavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String             ql = "select a from Ansatt as a where a.fornavn = '" + fornavn +
-			                        "' order by a.fornavn";
+			String             ql = "select a from Ansatt as a where a.fornavn = '" + fornavn + "' order by a.fornavn";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
@@ -92,8 +102,7 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedEtternavn(String etternavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String             ql = "select a from Ansatt as a where a.etternavn = '" + etternavn +
-			                        "' order by a.etternavn";
+			String             ql = "select a from Ansatt as a where a.etternavn = '" + etternavn + "' order by a.etternavn";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
@@ -113,8 +122,7 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedStilling(String stilling) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String             ql = "select a from Ansatt as a where a.stilling = '" + stilling +
-			                        "' order by a.stilling";
+			String             ql = "select a from Ansatt as a where a.stilling = '" + stilling + "' order by a.stilling";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
@@ -138,6 +146,7 @@ public class AnsattDAO {
 		}
 		return oppdatertAnsatt;
 	}
+
 	public Ansatt oppdaterStilling(int id, String nyStilling) {
 		EntityManager     em              = emf.createEntityManager();
 		EntityTransaction tx              = em.getTransaction();
@@ -156,23 +165,51 @@ public class AnsattDAO {
 		}
 		return oppdatertAnsatt;
 	}
-	
-//	Under oppbygning 
-//	PASS PÅ
+
+	//	Under oppbygning
+	//	PASS PÅ
 	public void leggTilNyAnsatt(Ansatt nyAnsatt) {
-		EntityManager		em = emf.createEntityManager();
-		EntityTransaction 	tx = em.getTransaction();
-		
+
+		while (!sjekkBrukernavn(nyAnsatt)) {
+			nyAnsatt.setBrukernavn(lagNyttBrukernavn(nyAnsatt));
+		}
+
+		EntityManager     em = emf.createEntityManager();
+		EntityTransaction tx = em.getTransaction();
+
 		try {
 			tx.begin();
 			em.persist(nyAnsatt);
 			tx.commit();
-		} catch (Throwable a) {
+		} catch (Exception a) {
 			a.printStackTrace();
-			tx.rollback();			
+			tx.rollback();
 		} finally {
 			em.close();
 		}
-		
+
+	}
+
+	private boolean sjekkBrukernavn(Ansatt a) {
+		return finnAnsatteMedBrukernavn(a.getBrukernavn()).isEmpty();
+	}
+
+	private String lagNyttBrukernavn(Ansatt a) {
+		String nyttBrukernavn = "";
+
+		switch (a.getBrukernavn().length()) {
+			case 0, 1, 2 -> throw new InvalidParameterException("Brukernavn må være på minst 3 tegn");
+
+			case 3, 4 -> nyttBrukernavn = a.getBrukernavn() + "1"; // antar at det kun er bokstaver i brukernavn
+
+			case 5 -> { // antar at siste tegn er en int
+				int i = Character.getNumericValue(a.getBrukernavn().charAt(4));
+				i++;
+				nyttBrukernavn = a.getBrukernavn().substring(0, 4) + i;
+			}
+			default -> throw new InvalidParameterException("Brukernavn kan ikke være mer enn 5 tegn langt");
+
+		}
+		return nyttBrukernavn;
 	}
 }

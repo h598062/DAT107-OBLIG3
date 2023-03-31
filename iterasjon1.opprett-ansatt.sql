@@ -5,7 +5,7 @@ SET search_path TO OBLIG3;
 CREATE TABLE Ansatt
 (
     ansattid        SERIAL PRIMARY KEY,
-    brukernavn      VARCHAR(4) UNIQUE NOT NULL,
+    brukernavn      VARCHAR(5) UNIQUE NOT NULL,
     fornavn         VARCHAR(20) NOT NULL,
     etternavn       VARCHAR(30) NOT NULL,
     ansettelsesdato DATE NOT NULL,
