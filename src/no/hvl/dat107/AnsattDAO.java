@@ -1,10 +1,8 @@
 package no.hvl.dat107;
 
 import jakarta.persistence.*;
-import org.checkerframework.checker.units.qual.A;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
 
 

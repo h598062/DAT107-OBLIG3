@@ -105,7 +105,6 @@ public class Main {
 		
 //		Sender ny ansatt til metode i AnsattDAO for å bli opprettet
 		if (alleGyldig) {
-//			Må lage auto generert id og brukernavn
 			Ansatt nyAnsatt = new Ansatt(fornavn, etternavn, LocalDate.parse(ansettelsesdato), stilling,  lonnint);
 			// Legg til en ansatt med riktige parameter
 			ansattDAO.leggTilNyAnsatt(nyAnsatt);
