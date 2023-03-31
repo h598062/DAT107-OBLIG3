@@ -156,4 +156,23 @@ public class AnsattDAO {
 		}
 		return oppdatertAnsatt;
 	}
+	
+//	Under oppbygning 
+//	PASS PÅ
+	public void leggTilNyAnsatt(Ansatt nyAnsatt) {
+		EntityManager		em = emf.createEntityManager();
+		EntityTransaction 	tx = em.getTransaction();
+		
+		try {
+			tx.begin();
+			em.persist(nyAnsatt);
+			tx.commit();
+		} catch (Throwable a) {
+			a.printStackTrace();
+			tx.rollback();			
+		} finally {
+			em.close();
+		}
+		
+	}
 }

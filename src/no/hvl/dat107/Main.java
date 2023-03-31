@@ -1,6 +1,8 @@
 package no.hvl.dat107;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -57,7 +59,7 @@ public class Main {
 		System.out.print("Skriv inn Etternavn: ");
 		String etternavn = scanner.nextLine();
 
-		System.out.print("Skriv inn ansettelsesdato: ");
+		System.out.print("Skriv inn ansettelsesdato på denne måten 'yyyy-MM-dd': ");
 		String ansettelsesdato = scanner.nextLine();
 
 		System.out.print("Skriv inn stilling: ");
@@ -74,9 +76,52 @@ public class Main {
 			return;
 		}
 
-		//		TODO
-		//		Sjekke om inputs er gyldig
+//		Sjekker om alle inputs er gyldig
+		boolean alleGyldig = false;
+		
+//		Kanskje legge til bedre feilmelding / catch?
+		if (fornavn.length() < 20 && fornavn.length() > 0) {
+			if (etternavn.length() < 30 && etternavn.length() > 0) {
+				if (erValid(ansettelsesdato)) {
+					if (stilling.length() < 20 && stilling.length() > 0) {
+						if (lonnint > 0) {
+							alleGyldig = true;
+							System.out.println("Alle inputs er gyldig!");
+						} else {
+							System.out.println("Lønn er ikke gyldig");
+						}
+					} else {
+						System.out.println("Stilling er ikke gyldig");
+					}
+				} else {
+					System.out.println("Ansettelsesdato er ikke gylidg");
+				}
+			} else {
+				System.out.println("Etternavn er ikke gyldig");
+			}
+		} else {
+			System.out.println("Fornavn er ikke gyldig");
+		}
+		
+//		Sender ny ansatt til metode i AnsattDAO for å bli opprettet
+		if (alleGyldig) {
+//			Må lage auto generert id og brukernavn
+			Ansatt nyAnsatt = new Ansatt();
+			// Legg til en ansatt med riktige parameter
+			ansattDAO.leggTilNyAnsatt(nyAnsatt);
+		}
 
+	}
+	
+	private static boolean erValid(String input) {
+		String formatString = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+        try {
+            Date date = format.parse(input);
+            return input.equals(format.format(date));
+        } catch (Exception e) {
+            return false;
+        }
 	}
 
 	private static void oppdatereEnAnsattSinStillingEllerLonn() {
