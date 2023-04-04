@@ -13,6 +13,13 @@ public class AnsattDAO {
 		emf = Persistence.createEntityManagerFactory("oblig3PU", ServerSetup.getServerConfig());
 	}
 
+	/**
+	 * Finner en Ansatt med gitt ID
+	 *
+	 * @param ansattID Integer id til ansatt
+	 *
+	 * @return Referanse til Ansatt
+	 */
 	public Ansatt finnAnsattMedAnsattID(int ansattID) {
 
 		try (EntityManager em = emf.createEntityManager()) {
@@ -53,6 +60,13 @@ public class AnsattDAO {
 		}
 	}
 
+	/**
+	 * Returnerer Ansatt med oppgitt brukernavn
+	 *
+	 * @param brukernavn brukernavn til ansatt
+	 *
+	 * @return Liste med Ansatt
+	 */
 	public List<Ansatt> finnAnsatteMedBrukernavn(String brukernavn) {
 		try (EntityManager em = emf.createEntityManager()) {
 			String             ql = "select a from Ansatt as a where a.brukernavn = '" + brukernavn + "'";
@@ -62,9 +76,11 @@ public class AnsattDAO {
 	}
 
 	/**
-	 * @param fornavn
+	 * Returnerer Ansatt med oppgitt fornavn
 	 *
-	 * @return
+	 * @param fornavn fornavn til ansatt
+	 *
+	 * @return Ansatt
 	 */
 	public Ansatt finnAnsattMedFornavn(String fornavn) {
 
@@ -77,6 +93,13 @@ public class AnsattDAO {
 		}
 	}
 
+	/**
+	 * Returnerer Ansatt med oppgitt fornavn
+	 *
+	 * @param fornavn fornavn til ansatt
+	 *
+	 * @return Liste med Ansatt
+	 */
 	public List<Ansatt> finnAnsatteMedFornavn(String fornavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
@@ -86,6 +109,13 @@ public class AnsattDAO {
 		}
 	}
 
+	/**
+	 * Returnerer Ansatt med oppgitt etternavn
+	 *
+	 * @param etternavn etternavn til ansatt
+	 *
+	 * @return Ansatt
+	 */
 	public Ansatt finnAnsattMedEtternavn(String etternavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
@@ -97,6 +127,13 @@ public class AnsattDAO {
 		}
 	}
 
+	/**
+	 * Returnerer Ansatt med oppgitt etternavn
+	 *
+	 * @param etternavn etternavn til ansatt
+	 *
+	 * @return Liste med Ansatt
+	 */
 	public List<Ansatt> finnAnsatteMedEtternavn(String etternavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
@@ -106,6 +143,13 @@ public class AnsattDAO {
 		}
 	}
 
+	/**
+	 * Returnerer Ansatt med oppgitt stilling
+	 *
+	 * @param stilling stilling til ansatt
+	 *
+	 * @return Ansatt
+	 */
 	public Ansatt finnAnsattMedStilling(String stilling) {
 
 		try (EntityManager em = emf.createEntityManager()) {
@@ -117,6 +161,13 @@ public class AnsattDAO {
 		}
 	}
 
+	/**
+	 * Returnerer Ansatt med oppgitt stilling
+	 *
+	 * @param stilling stilling til ansatt
+	 *
+	 * @return Liste med Ansatt
+	 */
 	public List<Ansatt> finnAnsatteMedStilling(String stilling) {
 
 		try (EntityManager em = emf.createEntityManager()) {
@@ -126,6 +177,14 @@ public class AnsattDAO {
 		}
 	}
 
+	/**
+	 * Oppdaterer lønn til en ansatt med oppgitt id
+	 *
+	 * @param id     id til ansatt som skal endres
+	 * @param nyLonn ny lønn den ansatte skal ha
+	 *
+	 * @return referanse til den oppdaterte Ansatt
+	 */
 	public Ansatt oppdaterLonn(int id, int nyLonn) {
 		EntityManager     em              = emf.createEntityManager();
 		EntityTransaction tx              = em.getTransaction();
@@ -145,6 +204,14 @@ public class AnsattDAO {
 		return oppdatertAnsatt;
 	}
 
+	/**
+	 * Oppdaterer stilling til en ansatt med oppgitt id
+	 *
+	 * @param id         id til ansatt som skal endres
+	 * @param nyStilling ny stilling den ansatte skal ha
+	 *
+	 * @return referanse til den oppdaterte Ansatt
+	 */
 	public Ansatt oppdaterStilling(int id, String nyStilling) {
 		EntityManager     em              = emf.createEntityManager();
 		EntityTransaction tx              = em.getTransaction();
@@ -164,8 +231,12 @@ public class AnsattDAO {
 		return oppdatertAnsatt;
 	}
 
-	//	Under oppbygning
-	//	PASS PÅ
+	/**
+	 * Legger til en ny ansatt i database<br>
+	 * Under oppbygning, PASS PÅ
+	 *
+	 * @param nyAnsatt Den nye ansatte som skal legges til
+	 */
 	public void leggTilNyAnsatt(Ansatt nyAnsatt) {
 
 		while (!sjekkBrukernavn(nyAnsatt)) {
@@ -188,10 +259,26 @@ public class AnsattDAO {
 
 	}
 
+	/**
+	 * Intern metode for å sjekke at brukernavn ikke er i bruk
+	 *
+	 * @param a en Ansatt
+	 *
+	 * @return true om brukernavnet er ledig
+	 */
 	private boolean sjekkBrukernavn(Ansatt a) {
 		return finnAnsatteMedBrukernavn(a.getBrukernavn()).isEmpty();
 	}
 
+	/**
+	 * Genererer et nytt brukernavn for en Ansatt<br>
+	 * denne metoden gjør ingen direkte endringer, men returnerer det nye brukernavnet<br>
+	 * legger til eller inkrementerer en integer på slutten av brukernavnet
+	 *
+	 * @param a en Ansatt
+	 *
+	 * @return Det nye brukernavnet til den ansatte
+	 */
 	private String lagNyttBrukernavn(Ansatt a) {
 		String nyttBrukernavn = "";
 
