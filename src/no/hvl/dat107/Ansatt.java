@@ -11,7 +11,7 @@ public class Ansatt {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int       ansattid;
+	private int       id;
 	private String    brukernavn;
 	private String    fornavn;
 	private String    etternavn;
@@ -39,11 +39,12 @@ public class Ansatt {
 
 	/**
 	 * Konstruktør som automatisk genererer brukernavn
-	 * @param fornavn Fornavn
-	 * @param etternavn Etternavn
+	 *
+	 * @param fornavn         Fornavn
+	 * @param etternavn       Etternavn
 	 * @param ansettelsesdato Ansettelsesdato
-	 * @param stilling Stilling
-	 * @param maanedslonn Lønn
+	 * @param stilling        Stilling
+	 * @param maanedslonn     Lønn
 	 */
 	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn) {
 		this.brukernavn      = genererBrukernavn(fornavn, etternavn);
@@ -77,16 +78,20 @@ public class Ansatt {
 		switch (fornavn.length()) {
 			case 0 -> throw new InvalidParameterException("Fornavn må være på minst ett tegn");
 
-			case 1 -> nyttBrukernavn.append(fornavn.charAt(0)).append("x");
+			case 1 -> nyttBrukernavn.append(fornavn.charAt(0))
+			                        .append("x");
 
-			default -> nyttBrukernavn.append(fornavn.charAt(0)).append(fornavn.charAt(1));
+			default -> nyttBrukernavn.append(fornavn.charAt(0))
+			                         .append(fornavn.charAt(1));
 		}
 		switch (etternavn.length()) {
 			case 0 -> throw new InvalidParameterException("Etternavn må være på minst ett tegn");
 
-			case 1 -> nyttBrukernavn.append(fornavn.charAt(0)).append("x");
+			case 1 -> nyttBrukernavn.append(fornavn.charAt(0))
+			                        .append("x");
 
-			default -> nyttBrukernavn.append(fornavn.charAt(0)).append(fornavn.charAt(1));
+			default -> nyttBrukernavn.append(fornavn.charAt(0))
+			                         .append(fornavn.charAt(1));
 		}
 		return nyttBrukernavn.toString();
 	}
@@ -94,7 +99,7 @@ public class Ansatt {
 
 	@Override
 	public String toString() {
-		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + ansattid + "\n\tBrukernavn:\t" + brukernavn + "\n\t" + "Ansettelsdato:\t" +
+		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + id + "\n\tBrukernavn:\t" + brukernavn + "\n\t" + "Ansettelsdato:\t" +
 		       ansettelsesdato + "\n\t" + "Stiling:\t" + stilling + "\n\tMånedslønn:\t" + maanedslonn;
 	}
 

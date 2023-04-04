@@ -195,15 +195,18 @@ public class AnsattDAO {
 	private String lagNyttBrukernavn(Ansatt a) {
 		String nyttBrukernavn = "";
 
-		switch (a.getBrukernavn().length()) {
+		switch (a.getBrukernavn()
+		         .length()) {
 			case 0, 1, 2 -> throw new InvalidParameterException("Brukernavn må være på minst 3 tegn");
 
 			case 3, 4 -> nyttBrukernavn = a.getBrukernavn() + "1"; // antar at det kun er bokstaver i brukernavn
 
 			case 5 -> { // antar at siste tegn er en int
-				int i = Character.getNumericValue(a.getBrukernavn().charAt(4));
+				int i = Character.getNumericValue(a.getBrukernavn()
+				                                   .charAt(4));
 				i++;
-				nyttBrukernavn = a.getBrukernavn().substring(0, 4) + i;
+				nyttBrukernavn = a.getBrukernavn()
+				                  .substring(0, 4) + i;
 			}
 			default -> throw new InvalidParameterException("Brukernavn kan ikke være mer enn 5 tegn langt");
 

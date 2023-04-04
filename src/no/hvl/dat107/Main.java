@@ -76,10 +76,10 @@ public class Main {
 			return;
 		}
 
-//		Sjekker om alle inputs er gyldig
+		//		Sjekker om alle inputs er gyldig
 		boolean alleGyldig = false;
-		
-//		Kanskje legge til bedre feilmelding / catch?
+
+		//		Kanskje legge til bedre feilmelding / catch?
 		if (fornavn.length() <= 20 && fornavn.length() > 0) {
 			if (etternavn.length() <= 30 && etternavn.length() > 0) {
 				if (erValid(ansettelsesdato)) {
@@ -102,25 +102,25 @@ public class Main {
 		} else {
 			System.out.println("Fornavn er ikke gyldig");
 		}
-		
-//		Sender ny ansatt til metode i AnsattDAO for å bli opprettet
+
+		//		Sender ny ansatt til metode i AnsattDAO for å bli opprettet
 		if (alleGyldig) {
-			Ansatt nyAnsatt = new Ansatt(fornavn, etternavn, LocalDate.parse(ansettelsesdato), stilling,  lonnint);
+			Ansatt nyAnsatt = new Ansatt(fornavn, etternavn, LocalDate.parse(ansettelsesdato), stilling, lonnint);
 			// Legg til en ansatt med riktige parameter
 			ansattDAO.leggTilNyAnsatt(nyAnsatt);
 		}
 
 	}
-	
+
 	private static boolean erValid(String input) {
-		String formatString = "yyyy-MM-dd";
-        SimpleDateFormat format = new SimpleDateFormat(formatString);
-        try {
-            Date date = format.parse(input);
-            return input.equals(format.format(date));
-        } catch (Exception e) {
-            return false;
-        }
+		String           formatString = "yyyy-MM-dd";
+		SimpleDateFormat format       = new SimpleDateFormat(formatString);
+		try {
+			Date date = format.parse(input);
+			return input.equals(format.format(date));
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	private static void oppdatereEnAnsattSinStillingEllerLonn() {
@@ -166,9 +166,9 @@ public class Main {
 							System.out.print("Skriv inn ny lønn til denne ansatte: ");
 							String inputLonn = scanner.nextLine();
 							try {
-								int inputIDInt = Integer.parseInt(inputID);
-								int inputLonnInt = Integer.parseInt(inputLonn);
-								Ansatt a = ansattDAO.oppdaterLonn(inputIDInt, inputLonnInt);
+								int    inputIDInt   = Integer.parseInt(inputID);
+								int    inputLonnInt = Integer.parseInt(inputLonn);
+								Ansatt a            = ansattDAO.oppdaterLonn(inputIDInt, inputLonnInt);
 								System.out.println("Oppdatert ansatt:\n" + a);
 								validInput = true;
 							} catch (NumberFormatException e) {
