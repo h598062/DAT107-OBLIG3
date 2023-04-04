@@ -2,7 +2,6 @@ package no.hvl.dat107;
 
 import jakarta.persistence.*;
 
-import java.security.InvalidParameterException;
 import java.time.LocalDate;
 
 @Entity
@@ -10,7 +9,7 @@ import java.time.LocalDate;
 public class Ansatt {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // autogenerert SERIAL (integer)
 	private int       id;
 	private String    brukernavn;
 	private String    fornavn;
@@ -19,22 +18,11 @@ public class Ansatt {
 	private String    stilling;
 	private int       maanedslonn;
 
-	//	Ansatt + id + brukernavn
-	//		Fornavn etternavn
-	//		dato
-	//		stilling og lønn
-
+	@ManyToOne // en ansatt har en avdeling, en avdeling har mange ansatte
+	@JoinColumn(name = "id", referencedColumnName = "id") // denne sin id e linket mot Avdeling.id
+	private Avdeling avdeling; // ny i iterasjon 3
 
 	public Ansatt() {
-	}
-
-	public Ansatt(String brukernavn, String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn) {
-		this.brukernavn      = brukernavn;
-		this.fornavn         = fornavn;
-		this.etternavn       = etternavn;
-		this.ansettelsesdato = ansettelsesdato;
-		this.stilling        = stilling;
-		this.maanedslonn     = maanedslonn;
 	}
 
 	/**
@@ -70,13 +58,13 @@ public class Ansatt {
 	private String genererBrukernavn(String fornavn, String etternavn) {
 		StringBuilder nyttBrukernavn = new StringBuilder();
 		if (fornavn == null) {
-			throw new InvalidParameterException("Fornavn kan ikke være null");
+			throw new IllegalArgumentException("Fornavn kan ikke være null");
 		}
 		if (etternavn == null) {
-			throw new InvalidParameterException("Etternavn kan ikke være null");
+			throw new IllegalArgumentException("Etternavn kan ikke være null");
 		}
 		switch (fornavn.length()) {
-			case 0 -> throw new InvalidParameterException("Fornavn må være på minst ett tegn");
+			case 0 -> throw new IllegalArgumentException("Fornavn må være på minst ett tegn");
 
 			case 1 -> nyttBrukernavn.append(fornavn.charAt(0))
 			                        .append("x");
@@ -85,7 +73,7 @@ public class Ansatt {
 			                         .append(fornavn.charAt(1));
 		}
 		switch (etternavn.length()) {
-			case 0 -> throw new InvalidParameterException("Etternavn må være på minst ett tegn");
+			case 0 -> throw new IllegalArgumentException("Etternavn må være på minst ett tegn");
 
 			case 1 -> nyttBrukernavn.append(fornavn.charAt(0))
 			                        .append("x");
