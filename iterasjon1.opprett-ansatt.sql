@@ -10,7 +10,7 @@ CREATE TABLE Ansatt
     etternavn       VARCHAR(30)       NOT NULL,
     ansettelsesdato DATE              NOT NULL,
     stilling        VARCHAR(20)       NOT NULL,
-    maanedslonn     INT               NOT NULL CHECK ( maanedslonn > 0 )
+    maanedslonn     INTEGER           NOT NULL CHECK ( maanedslonn > 0 )
 );
 
 INSERT INTO Ansatt(brukernavn, fornavn, etternavn, ansettelsesdato, stilling, maanedslonn)
