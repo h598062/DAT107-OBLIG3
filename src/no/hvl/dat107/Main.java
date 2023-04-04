@@ -35,9 +35,7 @@ public class Main {
 					case 3 -> skrivUtAlleAnsatte();
 					case 4 -> oppdatereEnAnsattSinStillingEllerLonn();
 					case 5 -> leggeTilNyAnsatt();
-					default -> {
-						System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
-					}
+					default -> System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Input " + valg + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
