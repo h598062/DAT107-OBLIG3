@@ -14,8 +14,9 @@ public class Avdeling {
 
 	private String navn;
 
-	// må mappe denne mot Ansatt.id
-	private int avdelingsleder;
+	@OneToOne
+	@JoinColumn(name = "avdelingsleder")
+	private Ansatt avdelingsleder;
 
 	// en ansatt har en avdeling, en avdeling har mange ansatte
 	@OneToMany(mappedBy = "avdeling", fetch = FetchType.EAGER, cascade = CascadeType.ALL,
@@ -27,7 +28,7 @@ public class Avdeling {
 		return navn;
 	}
 
-	public int getAvdelingsleder() {
+	public Ansatt getAvdelingsleder() {
 		return avdelingsleder;
 	}
 
@@ -41,7 +42,12 @@ public class Avdeling {
 
 	@Override
 	public String toString() {
-		return "Avdeling{" + "id=" + id + ", navn='" + navn + '\'' + ", avdelingsleder=" + avdelingsleder +
-		       ", ansatte=" + ansatte + '}';
+		String s = "Avdeling:\t" + navn + "\n\tId:\t" + id + "\n\tAvdelingsleder:\t" +
+		           avdelingsleder.getFornavn() + " " + avdelingsleder.getEtternavn() +
+		           "\nAvdelingsmedlemmer:\n";
+		for (Ansatt a : ansatte) {
+			s += a.toString() + "\n";
+		}
+		return s;
 	}
 }
