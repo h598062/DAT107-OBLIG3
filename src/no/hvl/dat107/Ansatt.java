@@ -18,8 +18,9 @@ public class Ansatt {
 	private String    stilling;
 	private int       maanedslonn;
 
+
 	@ManyToOne // en ansatt har en avdeling, en avdeling har mange ansatte
-	@JoinColumn(name = "id", referencedColumnName = "id") // denne sin id e linket mot Avdeling.id
+	@JoinColumn(name = "avdeling") // Dette er navnet på kolonnen i ansatt tabellen
 	private Avdeling avdeling; // ny i iterasjon 3
 
 	public Ansatt() {
@@ -88,7 +89,7 @@ public class Ansatt {
 	@Override
 	public String toString() {
 		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + id + "\n\tBrukernavn:\t" + brukernavn + "\n\t" + "Ansettelsdato:\t" +
-		       ansettelsesdato + "\n\t" + "Stiling:\t" + stilling + "\n\tMånedslønn:\t" + maanedslonn;
+		       ansettelsesdato + "\n\t" + "Stiling:\t" + stilling + "\n\tMånedslønn:\t" + maanedslonn + "\n\tAvdeling:\t" + avdeling.getNavn();
 	}
 
 	public void setStilling(String stilling) {

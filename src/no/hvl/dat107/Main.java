@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Main {
 	private static final Scanner   scanner   = new Scanner(System.in);
 	private static final AnsattDAO ansattDAO = new AnsattDAO();
+	private static final AvdelingDAO avdelingDAO = new AvdelingDAO();
 
 	public static void main(String[] args) {
 
@@ -22,8 +23,9 @@ public class Main {
 			                   2. - Søke etter ansatt på brukernavn (initialer)
 			                   3. - Utlisting av alle ansatte
 			                   4. - Oppdatere en ansatt sin stilling og/eller lønn
-			                   5. - Legge inn en ny ansatt""");
-			System.out.print("Skriv inn et tall fra 0-5: ");
+			                   5. - Legge inn en ny ansatt
+			                   6. - Søk etter avdeling med id""");
+			System.out.print("Skriv inn et tall fra 0-6: ");
 			String valg = scanner.nextLine();
 
 			try {
@@ -35,12 +37,27 @@ public class Main {
 					case 3 -> skrivUtAlleAnsatte();
 					case 4 -> oppdatereEnAnsattSinStillingEllerLonn();
 					case 5 -> leggeTilNyAnsatt();
+					case 6 -> sokAvdelingMedId();
 					default -> System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Input " + valg + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
 			}
 			System.out.println();
+		}
+	}
+
+	private static void sokAvdelingMedId() {
+		System.out.print("Skriv inn avdelingsid : ");
+		String skrivInn = scanner.nextLine();
+		try {
+			int skrivInnInt = Integer.parseInt(skrivInn);
+
+			System.out.println(avdelingDAO.finnAvdelingMedID(skrivInnInt));
+			System.out.println();
+
+		} catch (NumberFormatException e) {
+			System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
 		}
 	}
 

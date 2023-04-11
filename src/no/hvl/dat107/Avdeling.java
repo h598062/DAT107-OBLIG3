@@ -18,7 +18,9 @@ public class Avdeling {
 	private int avdelingsleder;
 
 	// en ansatt har en avdeling, en avdeling har mange ansatte
-	@OneToMany(mappedBy = "avdeling", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "avdeling", fetch = FetchType.EAGER, cascade = CascadeType.ALL,
+	           orphanRemoval = true)
+	@JoinColumn
 	private List<Ansatt> ansatte;
 
 	public String getNavn() {
@@ -35,5 +37,11 @@ public class Avdeling {
 
 	public List<Ansatt> getAnsatte() {
 		return ansatte;
+	}
+
+	@Override
+	public String toString() {
+		return "Avdeling{" + "id=" + id + ", navn='" + navn + '\'' + ", avdelingsleder=" + avdelingsleder +
+		       ", ansatte=" + ansatte + '}';
 	}
 }
