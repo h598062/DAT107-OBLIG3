@@ -34,7 +34,7 @@ public class Ansatt {
 	 * @param stilling        Stilling
 	 * @param maanedslonn     Lønn
 	 */
-	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn, int avdeling) {
+	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn, Avdeling avdeling) {
 		this.brukernavn      = genererBrukernavn(fornavn, etternavn);
 		this.fornavn         = fornavn;
 		this.etternavn       = etternavn;

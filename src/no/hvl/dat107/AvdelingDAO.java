@@ -37,7 +37,7 @@ public class AvdelingDAO {
 	public List<Avdeling> finnAlleAvdelinger() {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String             ql = "select a from Avdeling as a";
+			String             ql = "select a from Avdeling as a where a.id > 1"; // ignorer avdeling med id 1 siden det er en test avdeling
 			TypedQuery<Avdeling> q  = em.createQuery(ql, Avdeling.class);
 			return q.getResultList();
 		}

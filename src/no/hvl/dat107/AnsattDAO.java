@@ -36,7 +36,7 @@ public class AnsattDAO {
 	public List<Ansatt> finnAlleAnsatte() {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String             ql = "select a from Ansatt as a order by a.brukernavn";
+			String             ql = "select a from Ansatt as a where a.id > 1 order by a.brukernavn";
 			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}

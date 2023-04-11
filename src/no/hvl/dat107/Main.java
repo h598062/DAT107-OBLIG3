@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-	private static final Scanner   scanner   = new Scanner(System.in);
-	private static final AnsattDAO ansattDAO = new AnsattDAO();
+	private static final Scanner     scanner     = new Scanner(System.in);
+	private static final AnsattDAO   ansattDAO   = new AnsattDAO();
 	private static final AvdelingDAO avdelingDAO = new AvdelingDAO();
 
 	public static void main(String[] args) {
@@ -41,7 +41,8 @@ public class Main {
 					default -> System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
 				}
 			} catch (NumberFormatException e) {
-				System.out.println("Input " + valg + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
+				System.out.println("Input " + valg +
+				                   " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
 			}
 			System.out.println();
 		}
@@ -67,7 +68,8 @@ public class Main {
 	}
 
 	private static void leggeTilNyAnsatt() {
-		System.out.println("Dette er en veiviser for å opprette en ny bruker," + " skriv opplysningene du får fra 1881!");
+		System.out.println("Dette er en veiviser for å opprette en ny bruker," +
+		                   " skriv opplysningene du får fra 1881!");
 		System.out.print("Skriv inn Fornavn: ");
 		String fornavn = scanner.nextLine();
 
@@ -86,7 +88,8 @@ public class Main {
 		try {
 			lonnint = Integer.parseInt(lonn);
 		} catch (NumberFormatException e) {
-			System.out.println("Input " + lonn + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
+			System.out.println("Input " + lonn +
+			                   " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
 			leggeTilNyAnsatt();
 			return;
 		}
@@ -120,7 +123,29 @@ public class Main {
 
 		//		Sender ny ansatt til metode i AnsattDAO for å bli opprettet
 		if (alleGyldig) {
-			Ansatt nyAnsatt = new Ansatt(fornavn, etternavn, LocalDate.parse(ansettelsesdato), stilling, lonnint);
+			System.out.println("Velg hvilken avdeling den anssatte skal jobbe i:");
+			List<Avdeling> avdelinger = avdelingDAO.finnAlleAvdelinger();
+			for (int i = 0; i < avdelinger.size(); i++) {
+				System.out.println(i + ". - " + avdelinger.get(i).getNavn() + " - id: " + avdelinger.get(i).getId());
+			}
+			System.out.print("Skriv inn avdelingsid : ");
+			int skrivInnInt = -1;
+			while (skrivInnInt < 0 || skrivInnInt >= avdelinger.size()) {
+				String skrivInn = scanner.nextLine();
+				try {
+					skrivInnInt = Integer.parseInt(skrivInn);
+
+					System.out.println(avdelingDAO.finnAvdelingMedID(skrivInnInt));
+					System.out.println();
+
+				} catch (NumberFormatException e) {
+					System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
+					System.out.println("Prøv igjen: ");
+				}
+			}
+			Avdeling avd = avdelinger.get(skrivInnInt);
+			Ansatt nyAnsatt = new Ansatt(fornavn, etternavn, LocalDate.parse(ansettelsesdato), stilling,
+					lonnint, avd);
 			// Legg til en ansatt med riktige parameter
 			ansattDAO.leggTilNyAnsatt(nyAnsatt);
 		}
@@ -155,7 +180,8 @@ public class Main {
 					case 1 -> {
 						System.out.println("Du har valgt å oppdatere Stilling for en ansatt");
 						while (!validInput) {
-							System.out.print("Skriv inn id (heltall) til den ansatte du ønsker å endre stilling på: ");
+							System.out.print(
+									"Skriv inn id (heltall) til den ansatte du ønsker å endre stilling på: ");
 							String inputID = scanner.nextLine();
 							System.out.print("Skriv inn ny stilling til denne ansatte: ");
 							String inputStilling = scanner.nextLine();
@@ -176,7 +202,8 @@ public class Main {
 					case 2 -> {
 						System.out.println("Du har valgt å oppdatere Lønn for en ansatt");
 						while (!validInput) {
-							System.out.print("Skriv inn id (heltall) til den ansatte du ønsker å endre lønn på: ");
+							System.out.print(
+									"Skriv inn id (heltall) til den ansatte du ønsker å endre lønn på: ");
 							String inputID = scanner.nextLine();
 							System.out.print("Skriv inn ny lønn til denne ansatte: ");
 							String inputLonn = scanner.nextLine();
@@ -187,7 +214,9 @@ public class Main {
 								System.out.println("Oppdatert ansatt:\n" + a);
 								validInput = true;
 							} catch (NumberFormatException e) {
-								System.out.println("Ikke gyldig id og/eller lønn, prøv igjen: id: " + inputID + ", lønn: " + inputLonn);
+								System.out.println(
+										"Ikke gyldig id og/eller lønn, prøv igjen: id: " + inputID +
+										", lønn: " + inputLonn);
 							}
 						}
 					}
@@ -197,7 +226,8 @@ public class Main {
 				System.out.println();
 				return;
 			} catch (NumberFormatException e) {
-				System.out.println("Input " + valg + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
+				System.out.println("Input " + valg +
+				                   " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
 			}
 		}
 
@@ -213,7 +243,8 @@ public class Main {
 	}
 
 	private static void sokMedBrukernavn() {
-		System.out.println("Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte ansattsøk");
+		System.out.println(
+				"Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte ansattsøk");
 
 		while (true) {
 			System.out.print("Skriv inn et brukernavn: ");
