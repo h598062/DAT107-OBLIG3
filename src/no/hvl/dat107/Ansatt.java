@@ -18,7 +18,6 @@ public class Ansatt {
 	private String    stilling;
 	private int       maanedslonn;
 
-
 	@ManyToOne // en ansatt har en avdeling, en avdeling har mange ansatte
 	@JoinColumn(name = "avdeling") // Dette er navnet på kolonnen i ansatt tabellen
 	private Avdeling avdeling; // ny i iterasjon 3
@@ -35,13 +34,14 @@ public class Ansatt {
 	 * @param stilling        Stilling
 	 * @param maanedslonn     Lønn
 	 */
-	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn) {
+	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn, int avdeling) {
 		this.brukernavn      = genererBrukernavn(fornavn, etternavn);
 		this.fornavn         = fornavn;
 		this.etternavn       = etternavn;
 		this.ansettelsesdato = ansettelsesdato;
 		this.stilling        = stilling;
 		this.maanedslonn     = maanedslonn;
+		this.avdeling        = avdeling; // todo må fikse
 	}
 
 	public void setBrukernavn(String brukernavn) {
