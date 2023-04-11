@@ -22,6 +22,10 @@ public class Ansatt {
 	@JoinColumn(name = "avdeling") // Dette er navnet på kolonnen i ansatt tabellen
 	private Avdeling avdeling; // ny i iterasjon 3
 
+	public int getId() {
+		return id;
+	}
+
 	public Ansatt() {
 	}
 
@@ -34,7 +38,8 @@ public class Ansatt {
 	 * @param stilling        Stilling
 	 * @param maanedslonn     Lønn
 	 */
-	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn, Avdeling avdeling) {
+	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling,
+	              int maanedslonn, Avdeling avdeling) {
 		this.brukernavn      = genererBrukernavn(fornavn, etternavn);
 		this.fornavn         = fornavn;
 		this.etternavn       = etternavn;
@@ -76,20 +81,21 @@ public class Ansatt {
 		switch (etternavn.length()) {
 			case 0 -> throw new IllegalArgumentException("Etternavn må være på minst ett tegn");
 
-			case 1 -> nyttBrukernavn.append(fornavn.charAt(0))
+			case 1 -> nyttBrukernavn.append(etternavn.charAt(0))
 			                        .append("x");
 
-			default -> nyttBrukernavn.append(fornavn.charAt(0))
-			                         .append(fornavn.charAt(1));
+			default -> nyttBrukernavn.append(etternavn.charAt(0))
+			                         .append(etternavn.charAt(1));
 		}
-		return nyttBrukernavn.toString();
+		return nyttBrukernavn.toString().toLowerCase();
 	}
 
 
 	@Override
 	public String toString() {
-		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + id + "\n\tBrukernavn:\t" + brukernavn + "\n\t" + "Ansettelsdato:\t" +
-		       ansettelsesdato + "\n\t" + "Stiling:\t" + stilling + "\n\tMånedslønn:\t" + maanedslonn + "\n\tAvdeling:\t" + avdeling.getNavn();
+		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + id + "\n\tBrukernavn:\t" + brukernavn +
+		       "\n\t" + "Ansettelsdato:\t" + ansettelsesdato + "\n\t" + "Stiling:\t" + stilling +
+		       "\n\tMånedslønn:\t" + maanedslonn + "\n\tAvdeling:\t" + avdeling.getNavn();
 	}
 
 	public void setStilling(String stilling) {
@@ -122,5 +128,32 @@ public class Ansatt {
 
 	public int getMaanedslonn() {
 		return maanedslonn;
+	}
+
+	public Avdeling getAvdeling() {
+		return avdeling;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Ansatt ansatt = (Ansatt) o;
+
+		return id == ansatt.id;
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
+	}
+
+	public void setAvdeling(Avdeling avdeling) {
+		this.avdeling = avdeling;
 	}
 }

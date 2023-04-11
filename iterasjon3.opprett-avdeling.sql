@@ -49,18 +49,23 @@ ALTER TABLE Avdeling
 -- test avdeling
 INSERT INTO Avdeling
     (navn, avdelingsleder)
-VALUES ('Beste avdeling', 1);
+VALUES ('Beste avdeling', 1),
+       ('Værste avdeling', 1);
 
 -- test ansatte
 INSERT INTO Ansatt(brukernavn, fornavn, etternavn, ansettelsesdato, stilling, maanedslonn, avdeling)
 VALUES ('bjhe', 'Bjørnar', 'Helgeland', '2021-08-15', 'code-monkey', 30000, 2),
-       ('krbe', 'Kristian', 'Bell', '2021-08-15', 'maskot', 25000, 2),
+       ('krbe', 'Kristian', 'Bell', '2021-08-15', 'maskot', 25000, 3),
        ('stsa', 'Storm', 'Sangolt', '2021-08-15', '"var tilstede"', 50000, 2);
 
 -- oppdater avdelingsleder i test avdeling til en av test ansatte
 UPDATE Avdeling
 SET avdelingsleder = 2
 WHERE navn = 'Beste avdeling';
+
+UPDATE Avdeling
+SET avdelingsleder = 3
+WHERE navn = 'Værste avdeling';
 
 -- skriv ut alle ansatte
 SELECT *

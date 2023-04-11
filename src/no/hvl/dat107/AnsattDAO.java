@@ -103,8 +103,8 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedFornavn(String fornavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String             ql = "select a from Ansatt as a where a.fornavn = '" + fornavn + "' order by a.fornavn";
-			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
+			String ql = "select a from Ansatt as a where a.fornavn = '" + fornavn + "' order by a.fornavn";
+			TypedQuery<Ansatt> q = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
 	}
@@ -137,8 +137,9 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedEtternavn(String etternavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String             ql = "select a from Ansatt as a where a.etternavn = '" + etternavn + "' order by a.etternavn";
-			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
+			String ql = "select a from Ansatt as a where a.etternavn = '" + etternavn +
+			            "' order by a.etternavn";
+			TypedQuery<Ansatt> q = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
 	}
@@ -171,8 +172,8 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedStilling(String stilling) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String             ql = "select a from Ansatt as a where a.stilling = '" + stilling + "' order by a.stilling";
-			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
+			String ql = "select a from Ansatt as a where a.stilling = '" + stilling + "' order by a.stilling";
+			TypedQuery<Ansatt> q = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
 	}
@@ -286,7 +287,8 @@ public class AnsattDAO {
 		         .length()) {
 			case 0, 1, 2 -> throw new InvalidParameterException("Brukernavn må være på minst 3 tegn");
 
-			case 3, 4 -> nyttBrukernavn = a.getBrukernavn() + "1"; // antar at det kun er bokstaver i brukernavn
+			case 3, 4 -> nyttBrukernavn = a.getBrukernavn() +
+			                              "1"; // antar at det kun er bokstaver i brukernavn
 
 			case 5 -> { // antar at siste tegn er en int
 				int i = Character.getNumericValue(a.getBrukernavn()
@@ -299,5 +301,25 @@ public class AnsattDAO {
 
 		}
 		return nyttBrukernavn;
+	}
+
+	public void oppdaterAvdeling(int ansattid, int avdelingid) {
+		EntityManager     em              = emf.createEntityManager();
+		EntityTransaction tx              = em.getTransaction();
+		Ansatt            oppdatertAnsatt = null;
+		Avdeling          nyAvdeling      = null;
+		try {
+			tx.begin();
+			oppdatertAnsatt = em.find(Ansatt.class, ansattid); // Finne rad som skal oppdateres
+			nyAvdeling      = em.find(Avdeling.class, avdelingid);
+			oppdatertAnsatt.setAvdeling(nyAvdeling); // Oppdatere managed oject a => sync med database
+			tx.commit();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			em.close();
+		}
 	}
 }

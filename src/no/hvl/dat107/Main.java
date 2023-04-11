@@ -24,8 +24,11 @@ public class Main {
 			                   3. - Utlisting av alle ansatte
 			                   4. - Oppdatere en ansatt sin stilling og/eller lønn
 			                   5. - Legge inn en ny ansatt
-			                   6. - Søk etter avdeling med id""");
-			System.out.print("Skriv inn et tall fra 0-6: ");
+			                   6. - Søk etter avdeling med id
+			                   7. - Liste ut alle avdelinger
+			                   8. - Oppdatere en ansatt sin avdeling
+			                   9. - Legge til ny avdeling""");
+			System.out.print("Skriv inn et tall fra 0-9: ");
 			String valg = scanner.nextLine();
 
 			try {
@@ -38,6 +41,9 @@ public class Main {
 					case 4 -> oppdatereEnAnsattSinStillingEllerLonn();
 					case 5 -> leggeTilNyAnsatt();
 					case 6 -> sokAvdelingMedId();
+					case 7 -> skrivUtAlleAvdelinger();
+					case 8 -> oppdaterEnAnsattSinAvdeling();
+					case 9 -> leggeTilNyAvdeling();
 					default -> System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
 				}
 			} catch (NumberFormatException e) {
@@ -46,6 +52,95 @@ public class Main {
 			}
 			System.out.println();
 		}
+	}
+
+	private static void skrivUtAlleAvdelinger() {
+		List<Avdeling> avdelinger = avdelingDAO.finnAlleAvdelinger();
+		System.out.println("Liste over alle avdelinger: ");
+		for (Avdeling a : avdelinger) {
+			System.out.println(a);
+		}
+		System.out.println();
+	}
+
+	private static void leggeTilNyAvdeling() {
+		System.out.print("Skriv inn navnet på den nye avdelingen: ");
+		String skrivInn = scanner.nextLine();
+		while (skrivInn == null || skrivInn.length() < 1 || skrivInn.length() > 20) {
+			System.out.println("Navnet på avdelingen må være på mellom 1 og 20 tegn");
+			System.out.print("Prøv igjen: ");
+			skrivInn = scanner.nextLine();
+		}
+		System.out.println(
+				"Den nye avdelingen må ha en sjef,\nvelg en ansatt fra listen under som skal bli sjef for den nye avdelingen:");
+		List<Ansatt> ansatte = ansattDAO.finnAlleAnsatte();
+		for (int i = 0; i < ansatte.size(); i++) {
+			Ansatt a = ansatte.get(i);
+			if (!avdelingDAO.erAvdelingsleder(a)) {
+				System.out.println(i + ":\n" + a);
+			}
+		}
+		String skrivInn2    = scanner.nextLine();
+		int    skrivInnInt2 = -1;
+		while (skrivInnInt2 < 0 || skrivInnInt2 >= ansatte.size()) {
+			try {
+				skrivInnInt2 = Integer.parseInt(skrivInn2);
+			} catch (NumberFormatException e) {
+				System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn2);
+			}
+		}
+		Ansatt a = ansatte.get(skrivInnInt2);
+		if (a == null) {
+			return;
+		}
+		Avdeling nyAvd = new Avdeling(skrivInn, a);
+		avdelingDAO.leggTilAvdeling(nyAvd);
+		ansattDAO.oppdaterAvdeling(a.getId(), nyAvd.getId());
+	}
+
+	private static void oppdaterEnAnsattSinAvdeling() {
+		System.out.print("Skriv inn en ansatt sin id: ");
+		String skrivInn    = scanner.nextLine();
+		int    skrivInnInt = -1;
+
+		try {
+			skrivInnInt = Integer.parseInt(skrivInn);
+		} catch (NumberFormatException e) {
+			System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
+		}
+		Ansatt a = ansattDAO.finnAnsattMedAnsattID(skrivInnInt);
+		if (a == null) {
+			System.out.println("Fant ingen ansatt med id: " + skrivInnInt);
+			return;
+		}
+		if (avdelingDAO.erAvdelingsleder(a)) {
+			System.out.println(
+					"Kan ikke endre avdeling for valgt ansatt da de er sjef for avdeling " + a.getAvdeling());
+			return;
+		}
+		List<Avdeling> avds = avdelingDAO.finnAlleAvdelinger();
+		System.out.println("Velg hvilken avdeling den ansatte skal flyttes til:");
+		for (int i = 0; i < avds.size(); i++) {
+			Avdeling avd = avds.get(i);
+			if (avd.equals(a.getAvdeling())) {
+				System.out.println("* " + i + ". - " + avd.getNavn() + "\tid: " + avd.getId());
+			} else {
+				System.out.println("  " + i + ". - " + avd.getNavn() + "\tid: " + avd.getId());
+			}
+		}
+		System.out.print("Velg en avdeling: ");
+		String skrivInn2    = scanner.nextLine();
+		int    skrivInnInt2 = -1;
+		while (skrivInnInt2 < 0 || skrivInnInt2 >= avds.size()) {
+			try {
+				skrivInnInt2 = Integer.parseInt(skrivInn2);
+			} catch (NumberFormatException e) {
+				System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn2);
+				System.out.print("Prøv igjen: ");
+			}
+		}
+		Avdeling avd = avds.get(skrivInnInt2);
+		ansattDAO.oppdaterAvdeling(skrivInnInt, avd.getId());
 	}
 
 	private static void sokAvdelingMedId() {
@@ -126,7 +221,9 @@ public class Main {
 			System.out.println("Velg hvilken avdeling den anssatte skal jobbe i:");
 			List<Avdeling> avdelinger = avdelingDAO.finnAlleAvdelinger();
 			for (int i = 0; i < avdelinger.size(); i++) {
-				System.out.println(i + ". - " + avdelinger.get(i).getNavn() + " - id: " + avdelinger.get(i).getId());
+				System.out.println(i + ". - " + avdelinger.get(i)
+				                                          .getNavn() + " - id: " + avdelinger.get(i)
+				                                                                             .getId());
 			}
 			System.out.print("Skriv inn avdelingsid : ");
 			int skrivInnInt = -1;

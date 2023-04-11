@@ -22,7 +22,7 @@ public class Avdeling {
 	@OneToMany(mappedBy = "avdeling", fetch = FetchType.EAGER, cascade = CascadeType.ALL,
 	           orphanRemoval = true)
 	@JoinColumn
-	private List<Ansatt> ansatte;
+	private List<Ansatt> ansatte; // todo finne ut hvorfor denne ikke oppdaterer seg skikkelig etter endringer
 
 	public String getNavn() {
 		return navn;
@@ -49,5 +49,32 @@ public class Avdeling {
 			s += a.toString() + "\n";
 		}
 		return s;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Avdeling avdeling = (Avdeling) o;
+
+		return id == avdeling.id;
+	}
+
+	public Avdeling(String navn, Ansatt avdelingsleder) {
+		this.navn           = navn;
+		this.avdelingsleder = avdelingsleder;
+	}
+
+	public Avdeling() {
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
 	}
 }
