@@ -43,8 +43,8 @@ public class Prosjektdeltagelse {
 	}
 
 	@Override
-	public String toString() { // todo fix denne
-		return "Prosjektdeltagelse{" + "ansatt=" + ansatt + ", prosjekt=" + prosjekt + '}';
+	public String toString() {
+		return ansatt + "\n" + prosjekt;
 	}
 
 	@Override

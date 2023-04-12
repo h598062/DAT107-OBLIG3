@@ -6,7 +6,9 @@ import no.hvl.dat107.dao.ProsjektDAO;
 import no.hvl.dat107.entity.Ansatt;
 import no.hvl.dat107.entity.Avdeling;
 import no.hvl.dat107.entity.Prosjekt;
+import no.hvl.dat107.entity.Prosjektdeltagelse;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -72,10 +74,51 @@ public class Main {
 	}
 
 	/**
+	 * Metode for å lese en id fra bruker via scanner
+	 *
+	 * @param type Hvilken type id, dette vil stå der det er '***' "Skriv inn id til ***: "
+	 *
+	 * @return id integer
+	 */
+	private static int hentOgValiderIntId(String type) {
+		System.out.printf("Skriv inn id til %s: ", type);
+		String input = scanner.nextLine();
+		int    id    = -1;
+		while (id < 1) {
+			try {
+				id = Integer.parseInt(input);
+			} catch (NumberFormatException e) {
+				System.out.println("Det du har skrevet inn inneholder annet enn tall, prøv igjen: " + input);
+			}
+			if (id < 1) {
+				System.out.println("Id må være >= 1");
+				System.out.print("Prøv igjen: ");
+				input = scanner.nextLine();
+			}
+		}
+		return id;
+	}
+
+	/**
 	 * Utskrift av info om prosjekt, inkl. liste av deltagere med rolle og timer, og totalt timetall for prosjektet
 	 */
 	private static void skrivUtProsjektInfo() {
 
+		int      pid = hentOgValiderIntId("prosjekt");
+		Prosjekt p   = prosjektDAO.finnProsjektMedId(pid);
+		if (p == null) {
+			System.out.println("Fant ingen prosjekt med id " + pid);
+			return;
+		}
+		System.out.println("Valgt prosjekt:\n" + p);
+		List<Prosjektdeltagelse> deltagelser = p.getDeltagelser();
+		System.out.println("Deltagelser:");
+		BigDecimal timeSum = new BigDecimal(0);
+		for (Prosjektdeltagelse pd : deltagelser) {
+			System.out.println(pd.getAnsatt() + "\n\tRolle: " + pd.getRolle() + "\n\tTimer: " + pd.getTimer().toString());
+			timeSum = timeSum.add(pd.getTimer());
+		}
+		System.out.println("Totalt antall timer for alle deltagere: " + timeSum);
 	}
 
 	/**
@@ -83,32 +126,8 @@ public class Main {
 	 */
 	private static void oppdatereTimerForProsjektDeltagelse() {
 		System.out.println("Veiviser for å legge til flere timer for en ansatt på et prosjekt");
-		System.out.print("Skriv inn id til den ansatte: ");
-		String input = scanner.nextLine();
-		int    aid   = -1;
-		while (aid < 2) { // id 1 er testbruker og skal ignoreres
-			try {
-				aid = Integer.parseInt(input);
-			} catch (NumberFormatException e) {
-				System.out.println("Det du har skrevet inn inneholder annet enn tall, prøv igjen: " + input);
-			}
-			if (aid < 2) {
-				System.out.println("feil ansatt id");
-			}
-		}
-		System.out.print("Skriv inn id til prosjektet: ");
-		String input2 = scanner.nextLine();
-		int    pid    = -1;
-		while (pid < 1) {
-			try {
-				pid = Integer.parseInt(input2);
-			} catch (NumberFormatException e) {
-				System.out.println("Det du har skrevet inn inneholder annet enn tall, prøv igjen: " + input2);
-			}
-			if (pid < 2) {
-				System.out.println("feil prosjekt id");
-			}
-		}
+		int aid = hentOgValiderIntId("ansatt");
+		int pid = hentOgValiderIntId("prosjekt");
 		System.out.println("Skriv inn antall timer som skal legges til." +
 		                   "\nDette må være på formatet h.h, altså hvis en ansatt har brukt 2t 30 min så skriver du 2.5");
 		System.out.print("Antall timer: ");
@@ -127,39 +146,10 @@ public class Main {
 	 */
 	private static void registrerProsjektDeltagelse() {
 		System.out.println("Veiviser for å registere en ny prosjektdeltagelse for en ansatt");
-		System.out.print("Skriv inn id til den ansatte: ");
-		String input = scanner.nextLine();
-		int    aid   = -1;
-		while (aid < 2) { // id 1 er testbruker og skal ignoreres
-			try {
-				aid = Integer.parseInt(input);
-			} catch (NumberFormatException e) {
-				System.out.println("Det du har skrevet inn inneholder annet enn tall, prøv igjen: " + input);
-			}
-			if (aid < 2) {
-				System.out.println("feil ansatt id");
-			}
-		}
-		System.out.print("Skriv inn id til prosjektet: ");
-		String input2 = scanner.nextLine();
-		int    pid    = -1;
-		while (pid < 1) {
-			try {
-				pid = Integer.parseInt(input2);
-			} catch (NumberFormatException e) {
-				System.out.println("Det du har skrevet inn inneholder annet enn tall, prøv igjen: " + input2);
-			}
-			if (pid < 2) {
-				System.out.println("feil prosjekt id");
-			}
-		}
-		System.out.print("Skriv inn rollen den ansatte har på prosjektet: ");
-		String rolle = scanner.nextLine();
-		while (rolle.length() < 1) {
-			System.out.println("Rolle må være på minst et tegn");
-			System.out.print("Prøv igjen: ");
-			rolle = scanner.nextLine();
-		}
+		int aid = hentOgValiderIntId("ansatt");
+		int pid = hentOgValiderIntId("prosjekt");
+		System.out.println("Skriv inn rollen den ansatte har på prosjektet: ");
+		String rolle = hentOgValiderTekststreng(20, "rolle");
 		System.out.println("Skriv inn antall timer den ansatte har brukt på prosjektet så langt." +
 		                   "\nDette må være på formatet h.h, altså hvis en ansatt har brukt 2t 30 min så skriver du 2.5");
 		System.out.print("Antall timer: ");
@@ -171,6 +161,35 @@ public class Main {
 		}
 
 		ansattDAO.registrerProsjektdeltagelse(aid, pid, rolle, timer);
+	}
+
+	/**
+	 * metode for å hente inn en tekststreng med gitt makslengde fra bruker via scanner
+	 *
+	 * @param lengde maks lengde, eller -1 for uendelig
+	 * @param type   Hvilken type tekststreng, dette vil stå der det er '***' "Skriv inn tekststteng ***: "
+	 *
+	 * @return Tekststreng
+	 */
+	private static String hentOgValiderTekststreng(int lengde, String type) {
+		System.out.printf("Skriv inn tekststreng %s: ", type);
+		String input = scanner.nextLine();
+		String s = type.substring(0, 1)
+		               .toUpperCase() + type.substring(1);
+		if (lengde == -1) {
+			while (input.length() < 1) {
+				System.out.printf("%s må være på mist ett tegn%n", s);
+				System.out.print("Prøv igjen: ");
+				input = scanner.nextLine();
+			}
+		} else {
+			while (input.length() < 1 || input.length() > lengde) {
+				System.out.printf("%s må være på mist ett tegn og maks %d%n", s, lengde);
+				System.out.print("Prøv igjen: ");
+				input = scanner.nextLine();
+			}
+		}
+		return input;
 	}
 
 	/**
@@ -213,22 +232,13 @@ public class Main {
 	private static void leggeTilNyttProsjekt() {
 
 		System.out.println("Veiviser for å legge til nytt prosjekt");
-		System.out.print("Skriv inn navn på prosjektet: ");
-		String navn = scanner.nextLine();
-		while (navn.length() < 1 || navn.length() > 20) {
-			System.out.println("Navnet må være på minst ett tegn, og maks 20 tegn");
-			System.out.print("Prøv igjen: ");
-			navn = scanner.nextLine();
-		}
-		System.out.print("Skriv inn beskrivelse til prosjektet: ");
-		String beskrivelse = scanner.nextLine();
-		while (beskrivelse.length() < 1) {
-			System.out.println("Beskrivelse må være på minst ett tegn");
-			System.out.print("Prøv igjen: ");
-			beskrivelse = scanner.nextLine();
-		}
-		Prosjekt p = new Prosjekt(navn, beskrivelse);
+		System.out.println("Skriv inn navn på prosjektet");
+		String navn = hentOgValiderTekststreng(20, "navn");
+		System.out.println("Skriv inn beskrivelse til prosjektet");
+		String   beskrivelse = hentOgValiderTekststreng(-1, "beskrivelse");
+		Prosjekt p           = new Prosjekt(navn, beskrivelse);
 		prosjektDAO.leggTilProsjekt(p);
+		System.out.println("Lagt til nytt prosjekt: " + p.getNavn());
 	}
 
 	/**
@@ -249,13 +259,9 @@ public class Main {
 	 * avdelingen skal automatisk overføres til avdelingen vedkommende blir sjef for.
 	 */
 	private static void leggeTilNyAvdeling() {
-		System.out.print("Skriv inn navnet på den nye avdelingen: ");
-		String skrivInn = scanner.nextLine();
-		while (skrivInn == null || skrivInn.length() < 1 || skrivInn.length() > 20) {
-			System.out.println("Navnet på avdelingen må være på mellom 1 og 20 tegn");
-			System.out.print("Prøv igjen: ");
-			skrivInn = scanner.nextLine();
-		}
+		System.out.println("Veiviser for å legge til ny avdeling");
+		System.out.println("Skriv inn navnet på den nye avdelingen");
+		String navn = hentOgValiderTekststreng(20, "navn");
 		System.out.println("Den nye avdelingen må ha en sjef,\nvelg en ansatt fra listen under som skal bli sjef for den nye avdelingen:");
 		List<Ansatt> ansatte = ansattDAO.finnAlleAnsatte();
 		for (int i = 0; i < ansatte.size(); i++) {
@@ -264,40 +270,34 @@ public class Main {
 				System.out.println(i + ":\n" + a);
 			}
 		}
-		String skrivInn2    = scanner.nextLine();
-		int    skrivInnInt2 = -1;
-		while (skrivInnInt2 < 0 || skrivInnInt2 >= ansatte.size()) {
+		String input    = scanner.nextLine();
+		int    inputInt = -1;
+		while (inputInt < 0 || inputInt >= ansatte.size()) {
 			try {
-				skrivInnInt2 = Integer.parseInt(skrivInn2);
+				inputInt = Integer.parseInt(input);
 			} catch (NumberFormatException e) {
-				System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn2);
+				System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + input);
 			}
 		}
-		Ansatt a = ansatte.get(skrivInnInt2);
+		Ansatt a = ansatte.get(inputInt);
 		if (a == null) {
 			return;
 		}
-		Avdeling nyAvd = new Avdeling(skrivInn, a);
+		Avdeling nyAvd = new Avdeling(navn, a);
 		avdelingDAO.leggTilAvdeling(nyAvd);
 		ansattDAO.oppdaterAvdeling(a.getId(), nyAvd.getId());
+		System.out.println("Lagt til ny avdeling: " + nyAvd.getNavn());
 	}
 
 	/**
 	 * Oppdatere hvilken avdeling en ansatt jobber på. Man kan ikke bytte avdeling hvis man er sjef!
 	 */
 	private static void oppdaterEnAnsattSinAvdeling() {
-		System.out.print("Skriv inn en ansatt sin id: ");
-		String skrivInn    = scanner.nextLine();
-		int    skrivInnInt = -1;
-
-		try {
-			skrivInnInt = Integer.parseInt(skrivInn);
-		} catch (NumberFormatException e) {
-			System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
-		}
-		Ansatt a = ansattDAO.finnAnsattMedAnsattID(skrivInnInt);
+		System.out.println("Veiviser for å oppdatere en ansatt sin avdeling.");
+		int    aid = hentOgValiderIntId("ansatt");
+		Ansatt a   = ansattDAO.finnAnsattMedAnsattID(aid);
 		if (a == null) {
-			System.out.println("Fant ingen ansatt med id: " + skrivInnInt);
+			System.out.println("Fant ingen ansatt med id: " + aid);
 			return;
 		}
 		if (avdelingDAO.erAvdelingsleder(a)) {
@@ -315,18 +315,19 @@ public class Main {
 			}
 		}
 		System.out.print("Velg en avdeling: ");
-		String skrivInn2    = scanner.nextLine();
-		int    skrivInnInt2 = -1;
-		while (skrivInnInt2 < 0 || skrivInnInt2 >= avds.size()) {
+		String input    = scanner.nextLine();
+		int    inputInt = -1;
+		while (inputInt < 0 || inputInt >= avds.size()) {
 			try {
-				skrivInnInt2 = Integer.parseInt(skrivInn2);
+				inputInt = Integer.parseInt(input);
 			} catch (NumberFormatException e) {
-				System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn2);
+				System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + input);
 				System.out.print("Prøv igjen: ");
 			}
 		}
-		Avdeling avd = avds.get(skrivInnInt2);
-		ansattDAO.oppdaterAvdeling(skrivInnInt, avd.getId());
+		Avdeling avd = avds.get(inputInt);
+		ansattDAO.oppdaterAvdeling(aid, avd.getId());
+		System.out.printf("Oppdatert %s %s sin avdeling%n", a.getFornavn(), a.getEtternavn());
 	}
 
 	/**
@@ -334,17 +335,8 @@ public class Main {
 	 * Utlisting av alle ansatte på en avdeling inkl. utheving av hvem som er sjef
 	 */
 	private static void sokAvdelingMedId() {
-		System.out.print("Skriv inn avdelingsid : ");
-		String skrivInn = scanner.nextLine();
-		try {
-			int skrivInnInt = Integer.parseInt(skrivInn);
-
-			System.out.println(avdelingDAO.finnAvdelingMedID(skrivInnInt));
-			System.out.println();
-
-		} catch (NumberFormatException e) {
-			System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
-		}
+		int avdid = hentOgValiderIntId("avdeling");
+		System.out.println(avdelingDAO.finnAvdelingMedID(avdid));
 	}
 
 	/**
@@ -464,40 +456,25 @@ public class Main {
 					}
 					case 1 -> {
 						System.out.println("Du har valgt å oppdatere Stilling for en ansatt");
-						while (!validInput) {
-							System.out.print("Skriv inn id (heltall) til den ansatte du ønsker å endre stilling på: ");
-							String inputID = scanner.nextLine();
-							System.out.print("Skriv inn ny stilling til denne ansatte: ");
-							String inputStilling = scanner.nextLine();
-							try {
-								int inputIDInt = Integer.parseInt(inputID);
-								if (inputStilling.length() < 1) {
-									System.out.println("Stilling må være en tekststreng på minst ett tegn");
-								} else {
-									Ansatt a = ansattDAO.oppdaterStilling(inputIDInt, inputStilling);
-									System.out.println("Oppdatert ansatt:\n" + a);
-									validInput = true;
-								}
-							} catch (NumberFormatException e) {
-								System.out.println("Ikke gyldig id: " + inputID + ", prøv igjen");
-							}
-						}
+						int    aid      = hentOgValiderIntId("ansatt");
+						String stilling = hentOgValiderTekststreng(20, "stilling");
+						Ansatt a        = ansattDAO.oppdaterStilling(aid, stilling);
+						System.out.println("Oppdatert ansatt:\n" + a);
 					}
 					case 2 -> {
 						System.out.println("Du har valgt å oppdatere Lønn for en ansatt");
+						int aid = hentOgValiderIntId("ansatt");
 						while (!validInput) {
-							System.out.print("Skriv inn id (heltall) til den ansatte du ønsker å endre lønn på: ");
-							String inputID = scanner.nextLine();
+
 							System.out.print("Skriv inn ny lønn til denne ansatte: ");
 							String inputLonn = scanner.nextLine();
 							try {
-								int    inputIDInt   = Integer.parseInt(inputID);
 								int    inputLonnInt = Integer.parseInt(inputLonn);
-								Ansatt a            = ansattDAO.oppdaterLonn(inputIDInt, inputLonnInt);
+								Ansatt a            = ansattDAO.oppdaterLonn(aid, inputLonnInt);
 								System.out.println("Oppdatert ansatt:\n" + a);
 								validInput = true;
 							} catch (NumberFormatException e) {
-								System.out.println("Ikke gyldig id og/eller lønn, prøv igjen: id: " + inputID + ", lønn: " + inputLonn);
+								System.out.println("Ikke gyldig lønn, prøv igjen: " + inputLonn);
 							}
 						}
 					}
@@ -529,25 +506,13 @@ public class Main {
 	 * Søke etter ansatt på brukernavn (initialer)
 	 */
 	private static void sokMedBrukernavn() {
-		System.out.println("Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte ansattsøk");
-
-		while (true) {
-			System.out.print("Skriv inn et brukernavn: ");
-			String userinput = scanner.nextLine();
-			while (userinput.length() < 3 || userinput.length() > 5) {
-				if (userinput.length() == 0) {
-					System.out.println("Avbrutt ansatt søk fra bruker");
-					return;
-				}
-				System.out.print("Brukernavn er på mellom 4 og 5 tegn, prøv igjen: ");
-				userinput = scanner.nextLine();
-			}
-			Ansatt a = ansattDAO.finnAnsattMedBrukernavn(userinput);
-			if (a != null) {
-				System.out.println("Fant denne brukeren: " + a);
-			} else {
-				System.out.println("Fant ingen brukere med brukernavn: " + userinput);
-			}
+		System.out.println("Skriv inn hele eller deler av brukernavnet til den ansatte du ønsker å finne");
+		String input = hentOgValiderTekststreng(5, "brukernavn");
+		Ansatt a     = ansattDAO.finnAnsattMedBrukernavn(input);
+		if (a == null) {
+			System.out.println("Fant ingen ansatte med dette brukernavnet");
+		} else {
+			System.out.println("Fant denne ansatte: " + a);
 		}
 	}
 
@@ -555,18 +520,8 @@ public class Main {
 	 * Søke etter ansatt på ansatt-id
 	 */
 	private static void sokMedAnsattId() {
-
-		System.out.print("Skriv inn ansattnummer : ");
-		String skrivInn = scanner.nextLine();
-		try {
-			int skrivInnInt = Integer.parseInt(skrivInn);
-
-			System.out.println(ansattDAO.finnAnsattMedAnsattID(skrivInnInt));
-			System.out.println();
-
-		} catch (NumberFormatException e) {
-			System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
-		}
+		int aid = hentOgValiderIntId("ansatt");
+		System.out.println(ansattDAO.finnAnsattMedAnsattID(aid));
 	}
 
 }

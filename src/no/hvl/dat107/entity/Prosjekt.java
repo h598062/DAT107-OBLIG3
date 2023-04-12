@@ -27,8 +27,20 @@ public class Prosjekt {
 	}
 
 	@Override
-	public String toString() { // todo fix denne
-		return "Prosjekt{" + "id=" + id + ", navn='" + navn + '\'' + ", beskrivelse='" + beskrivelse + '\'' + ", deltagelser=" + deltagelser + '}';
+	public String toString() {
+		return navn +"\n\tId: " + id + "\n\tBeskrivelse:\n\t" + formatterBeskrivelse();
+	}
+
+	private String formatterBeskrivelse() {
+		String[] ord = beskrivelse.split(" ");
+		StringBuilder ny = new StringBuilder();
+		for (int i = 0; i < ord.length; i++) {
+			ny.append(ord[i]).append(" ");
+			if (i != 0 && i % 8 == 0) {
+				ny.append("\n\t");
+			}
+		}
+		return ny.toString();
 	}
 
 	@Override
