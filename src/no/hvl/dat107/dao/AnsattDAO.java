@@ -1,6 +1,8 @@
-package no.hvl.dat107;
+package no.hvl.dat107.dao;
 
 import jakarta.persistence.*;
+import no.hvl.dat107.*;
+import no.hvl.dat107.entity.*;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -310,8 +312,8 @@ public class AnsattDAO {
 	public void oppdaterAvdeling(int ansattid, int avdelingid) {
 		EntityManager     em              = emf.createEntityManager();
 		EntityTransaction tx              = em.getTransaction();
-		Ansatt            oppdatertAnsatt = null;
-		Avdeling          nyAvdeling      = null;
+		Ansatt   oppdatertAnsatt = null;
+		Avdeling nyAvdeling      = null;
 		try {
 			tx.begin();
 			oppdatertAnsatt = em.find(Ansatt.class, ansattid); // Finne rad som skal oppdateres

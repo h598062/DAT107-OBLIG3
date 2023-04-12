@@ -1,4 +1,4 @@
-package no.hvl.dat107;
+package no.hvl.dat107.entity;
 
 import jakarta.persistence.*;
 

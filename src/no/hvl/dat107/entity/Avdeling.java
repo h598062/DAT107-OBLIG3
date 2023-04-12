@@ -1,4 +1,4 @@
-package no.hvl.dat107;
+package no.hvl.dat107.entity;
 
 import jakarta.persistence.*;
 
@@ -19,8 +19,7 @@ public class Avdeling {
 	private Ansatt avdelingsleder;
 
 	// en ansatt har en avdeling, en avdeling har mange ansatte
-	@OneToMany(mappedBy = "avdeling", fetch = FetchType.EAGER, cascade = CascadeType.ALL,
-	           orphanRemoval = true)
+	@OneToMany(mappedBy = "avdeling", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn
 	private List<Ansatt> ansatte; // todo finne ut hvorfor denne ikke oppdaterer seg skikkelig etter endringer
 
@@ -50,9 +49,8 @@ public class Avdeling {
 
 	@Override
 	public String toString() {
-		String s = "Avdeling:\t" + navn + "\n\tId:\t" + id + "\n\tAvdelingsleder:\t" +
-		           avdelingsleder.getFornavn() + " " + avdelingsleder.getEtternavn() +
-		           "\nAvdelingsmedlemmer:\n";
+		String s = "Avdeling:\t" + navn + "\n\tId:\t" + id + "\n\tAvdelingsleder:\t" + avdelingsleder.getFornavn() + " " +
+		           avdelingsleder.getEtternavn() + "\nAvdelingsmedlemmer:\n";
 		for (Ansatt a : ansatte) {
 			s += a.toString() + "\n";
 		}

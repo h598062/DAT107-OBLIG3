@@ -1,5 +1,8 @@
 package no.hvl.dat107;
 
+import no.hvl.dat107.dao.*;
+import no.hvl.dat107.entity.*;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -47,8 +50,7 @@ public class Main {
 					default -> System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
 				}
 			} catch (NumberFormatException e) {
-				System.out.println("Input " + valg +
-				                   " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
+				System.out.println("Input " + valg + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
 			}
 			System.out.println();
 		}
@@ -71,8 +73,7 @@ public class Main {
 			System.out.print("Prøv igjen: ");
 			skrivInn = scanner.nextLine();
 		}
-		System.out.println(
-				"Den nye avdelingen må ha en sjef,\nvelg en ansatt fra listen under som skal bli sjef for den nye avdelingen:");
+		System.out.println("Den nye avdelingen må ha en sjef,\nvelg en ansatt fra listen under som skal bli sjef for den nye avdelingen:");
 		List<Ansatt> ansatte = ansattDAO.finnAlleAnsatte();
 		for (int i = 0; i < ansatte.size(); i++) {
 			Ansatt a = ansatte.get(i);
@@ -114,8 +115,7 @@ public class Main {
 			return;
 		}
 		if (avdelingDAO.erAvdelingsleder(a)) {
-			System.out.println(
-					"Kan ikke endre avdeling for valgt ansatt da de er sjef for avdeling " + a.getAvdeling());
+			System.out.println("Kan ikke endre avdeling for valgt ansatt da de er sjef for avdeling " + a.getAvdeling());
 			return;
 		}
 		List<Avdeling> avds = avdelingDAO.finnAlleAvdelinger();
@@ -163,8 +163,7 @@ public class Main {
 	}
 
 	private static void leggeTilNyAnsatt() {
-		System.out.println("Dette er en veiviser for å opprette en ny bruker," +
-		                   " skriv opplysningene du får fra 1881!");
+		System.out.println("Dette er en veiviser for å opprette en ny bruker," + " skriv opplysningene du får fra 1881!");
 		System.out.print("Skriv inn Fornavn: ");
 		String fornavn = scanner.nextLine();
 
@@ -183,8 +182,7 @@ public class Main {
 		try {
 			lonnint = Integer.parseInt(lonn);
 		} catch (NumberFormatException e) {
-			System.out.println("Input " + lonn +
-			                   " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
+			System.out.println("Input " + lonn + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
 			leggeTilNyAnsatt();
 			return;
 		}
@@ -241,8 +239,7 @@ public class Main {
 				}
 			}
 			Avdeling avd = avdelinger.get(skrivInnInt);
-			Ansatt nyAnsatt = new Ansatt(fornavn, etternavn, LocalDate.parse(ansettelsesdato), stilling,
-					lonnint, avd);
+			Ansatt nyAnsatt = new Ansatt(fornavn, etternavn, LocalDate.parse(ansettelsesdato), stilling, lonnint, avd);
 			// Legg til en ansatt med riktige parameter
 			ansattDAO.leggTilNyAnsatt(nyAnsatt);
 		}
@@ -277,8 +274,7 @@ public class Main {
 					case 1 -> {
 						System.out.println("Du har valgt å oppdatere Stilling for en ansatt");
 						while (!validInput) {
-							System.out.print(
-									"Skriv inn id (heltall) til den ansatte du ønsker å endre stilling på: ");
+							System.out.print("Skriv inn id (heltall) til den ansatte du ønsker å endre stilling på: ");
 							String inputID = scanner.nextLine();
 							System.out.print("Skriv inn ny stilling til denne ansatte: ");
 							String inputStilling = scanner.nextLine();
@@ -299,8 +295,7 @@ public class Main {
 					case 2 -> {
 						System.out.println("Du har valgt å oppdatere Lønn for en ansatt");
 						while (!validInput) {
-							System.out.print(
-									"Skriv inn id (heltall) til den ansatte du ønsker å endre lønn på: ");
+							System.out.print("Skriv inn id (heltall) til den ansatte du ønsker å endre lønn på: ");
 							String inputID = scanner.nextLine();
 							System.out.print("Skriv inn ny lønn til denne ansatte: ");
 							String inputLonn = scanner.nextLine();
@@ -311,9 +306,7 @@ public class Main {
 								System.out.println("Oppdatert ansatt:\n" + a);
 								validInput = true;
 							} catch (NumberFormatException e) {
-								System.out.println(
-										"Ikke gyldig id og/eller lønn, prøv igjen: id: " + inputID +
-										", lønn: " + inputLonn);
+								System.out.println("Ikke gyldig id og/eller lønn, prøv igjen: id: " + inputID + ", lønn: " + inputLonn);
 							}
 						}
 					}
@@ -323,8 +316,7 @@ public class Main {
 				System.out.println();
 				return;
 			} catch (NumberFormatException e) {
-				System.out.println("Input " + valg +
-				                   " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
+				System.out.println("Input " + valg + " inneholder andre ting enn tall, prøv igjen eller skriv '0' for å avslutte");
 			}
 		}
 
@@ -340,8 +332,7 @@ public class Main {
 	}
 
 	private static void sokMedBrukernavn() {
-		System.out.println(
-				"Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte ansattsøk");
+		System.out.println("Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte ansattsøk");
 
 		while (true) {
 			System.out.print("Skriv inn et brukernavn: ");

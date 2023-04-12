@@ -1,6 +1,8 @@
-package no.hvl.dat107;
+package no.hvl.dat107.dao;
 
 import jakarta.persistence.*;
+import no.hvl.dat107.*;
+import no.hvl.dat107.entity.*;
 
 import java.util.List;
 
