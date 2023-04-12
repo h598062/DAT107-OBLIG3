@@ -24,6 +24,14 @@ public class Avdeling {
 	@JoinColumn
 	private List<Ansatt> ansatte; // todo finne ut hvorfor denne ikke oppdaterer seg skikkelig etter endringer
 
+	public Avdeling(String navn, Ansatt avdelingsleder) {
+		this.navn           = navn;
+		this.avdelingsleder = avdelingsleder;
+	}
+
+	public Avdeling() {
+	}
+
 	public String getNavn() {
 		return navn;
 	}
@@ -63,14 +71,6 @@ public class Avdeling {
 		Avdeling avdeling = (Avdeling) o;
 
 		return id == avdeling.id;
-	}
-
-	public Avdeling(String navn, Ansatt avdelingsleder) {
-		this.navn           = navn;
-		this.avdelingsleder = avdelingsleder;
-	}
-
-	public Avdeling() {
 	}
 
 	@Override

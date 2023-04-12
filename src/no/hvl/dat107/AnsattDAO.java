@@ -103,8 +103,8 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedFornavn(String fornavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String ql = "select a from Ansatt as a where a.fornavn = '" + fornavn + "' order by a.fornavn";
-			TypedQuery<Ansatt> q = em.createQuery(ql, Ansatt.class);
+			String             ql = "select a from Ansatt as a where a.fornavn = '" + fornavn + "' order by a.fornavn";
+			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
 	}
@@ -137,8 +137,7 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedEtternavn(String etternavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String ql = "select a from Ansatt as a where a.etternavn = '" + etternavn +
-			            "' order by a.etternavn";
+			String ql = "select a from Ansatt as a where a.etternavn = '" + etternavn + "' order by a.etternavn";
 			TypedQuery<Ansatt> q = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
@@ -172,8 +171,8 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedStilling(String stilling) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String ql = "select a from Ansatt as a where a.stilling = '" + stilling + "' order by a.stilling";
-			TypedQuery<Ansatt> q = em.createQuery(ql, Ansatt.class);
+			String             ql = "select a from Ansatt as a where a.stilling = '" + stilling + "' order by a.stilling";
+			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
 	}
@@ -287,8 +286,7 @@ public class AnsattDAO {
 		         .length()) {
 			case 0, 1, 2 -> throw new InvalidParameterException("Brukernavn må være på minst 3 tegn");
 
-			case 3, 4 -> nyttBrukernavn = a.getBrukernavn() +
-			                              "1"; // antar at det kun er bokstaver i brukernavn
+			case 3, 4 -> nyttBrukernavn = a.getBrukernavn() + "1"; // antar at det kun er bokstaver i brukernavn
 
 			case 5 -> { // antar at siste tegn er en int
 				int i = Character.getNumericValue(a.getBrukernavn()
@@ -320,6 +318,57 @@ public class AnsattDAO {
 			tx.rollback();
 		} finally {
 			em.close();
+		}
+	}
+
+	public void registrerProsjektdeltagelse(int ansattId, int prosjektId) {
+
+		EntityManager     em = emf.createEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try (em) {
+			tx.begin();
+
+			Ansatt   a = em.find(Ansatt.class, ansattId);
+			Prosjekt p = em.find(Prosjekt.class, prosjektId);
+
+			Prosjektdeltagelse pd = new Prosjektdeltagelse(a, p);
+
+			em.persist(pd);
+
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
+
+	}
+
+	public void slettProsjektdeltagelse(int ansattId, int prosjektId) {
+
+		EntityManager     em = emf.createEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try (em) {
+			tx.begin();
+
+			ProsjektdeltagelsePK pk = new ProsjektdeltagelsePK(ansattId, prosjektId);
+			Prosjektdeltagelse   pd = em.find(Prosjektdeltagelse.class, pk);
+
+			Ansatt   a = em.find(Ansatt.class, ansattId);
+			Prosjekt p = em.find(Prosjekt.class, prosjektId);
+
+			a.fjernProsjektdeltagelse(pd);
+			p.fjernProsjektdeltagelse(pd);
+
+			em.remove(pd);
+
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (tx.isActive()) {
+				tx.rollback();
+			}
 		}
 	}
 }

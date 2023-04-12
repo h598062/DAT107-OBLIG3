@@ -43,11 +43,11 @@ CREATE TABLE Prosjekt
 );
 
 -- Koblingstabell for Prosjekt-Ansatt, inspirasjon hentet fra f5_eks3a
-CREATE TABLE Timetabell
+CREATE TABLE Prosjektdeltagelse
 (
     ansattid   INTEGER,
     prosjektid INTEGER,
-    timer      INTEGER     NOT NULL CHECK ( timer > 0 ),
+    timer      DECIMAL(6, 2)     NOT NULL CHECK ( timer >= 0 ), -- desimaltall med 4 tall foran komma, 2 tall bak komma
     rolle      VARCHAR(30) NOT NULL,
     CONSTRAINT TimetabellPK PRIMARY KEY (ansattid, prosjektid), -- Sammensatt nøkkel av ansattid og prosjektid, blir en unik nøkkel
     CONSTRAINT AnsattFK FOREIGN KEY (ansattid) REFERENCES Ansatt (id),
@@ -95,7 +95,7 @@ SET avdelingsleder = 3
 WHERE navn = 'Værste avdeling';
 
 -- test timeregistreringer
-INSERT INTO Timetabell(ansattid, prosjektid, timer, rolle)
+INSERT INTO Prosjektdeltagelse(ansattid, prosjektid, timer, rolle)
 VALUES (2, 1, 200, 'Hoved-etterforsker'),
        (3, 1, 4, 'Sitter der og e fin'),
        (4, 1, 1, 'Møtte opp ene dagen');
@@ -112,4 +112,4 @@ FROM Avdeling
 -- Skriv ut alle prosjekter og dens timeregistrering
 SELECT *
 FROM Prosjekt
-         INNER JOIN Timetabell T ON Prosjekt.id = T.prosjektid
+         INNER JOIN Prosjektdeltagelse T ON Prosjekt.id = T.prosjektid

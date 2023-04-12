@@ -24,11 +24,7 @@ public class Ansatt {
 	private Avdeling avdeling; // ny i iterasjon 3
 
 	@OneToMany(mappedBy = "ansatt")
-	private List<Timetabell> timeregistrering;
-
-	public int getId() {
-		return id;
-	}
+	private List<Prosjektdeltagelse> deltagelser;
 
 	public Ansatt() {
 	}
@@ -52,8 +48,8 @@ public class Ansatt {
 		this.avdeling        = avdeling; // todo må fikse
 	}
 
-	public void setBrukernavn(String brukernavn) {
-		this.brukernavn = brukernavn;
+	public int getId() {
+		return id;
 	}
 
 	/**
@@ -94,23 +90,18 @@ public class Ansatt {
 		                     .toLowerCase();
 	}
 
-
 	@Override
 	public String toString() {
 		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + id + "\n\tBrukernavn:\t" + brukernavn + "\n\t" + "Ansettelsdato:\t" +
 		       ansettelsesdato + "\n\t" + "Stiling:\t" + stilling + "\n\tMånedslønn:\t" + maanedslonn + "\n\tAvdeling:\t" + avdeling.getNavn();
 	}
 
-	public void setStilling(String stilling) {
-		this.stilling = stilling;
-	}
-
-	public void setMaanedslonn(int maanedslonn) {
-		this.maanedslonn = maanedslonn;
-	}
-
 	public String getBrukernavn() {
 		return brukernavn;
+	}
+
+	public void setBrukernavn(String brukernavn) {
+		this.brukernavn = brukernavn;
 	}
 
 	public String getFornavn() {
@@ -129,12 +120,24 @@ public class Ansatt {
 		return stilling;
 	}
 
+	public void setStilling(String stilling) {
+		this.stilling = stilling;
+	}
+
 	public int getMaanedslonn() {
 		return maanedslonn;
 	}
 
+	public void setMaanedslonn(int maanedslonn) {
+		this.maanedslonn = maanedslonn;
+	}
+
 	public Avdeling getAvdeling() {
 		return avdeling;
+	}
+
+	public void setAvdeling(Avdeling avdeling) {
+		this.avdeling = avdeling;
 	}
 
 	@Override
@@ -156,7 +159,15 @@ public class Ansatt {
 		return id;
 	}
 
-	public void setAvdeling(Avdeling avdeling) {
-		this.avdeling = avdeling;
+	public List<Prosjektdeltagelse> getDeltagelser() {
+		return deltagelser;
+	}
+
+	public void registrerDeltagelse(Prosjektdeltagelse pd) {
+		deltagelser.add(pd);
+	}
+
+	public void fjernProsjektdeltagelse(Prosjektdeltagelse pd) {
+		deltagelser.remove(pd);
 	}
 }
