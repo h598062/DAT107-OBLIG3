@@ -34,6 +34,14 @@ CREATE TABLE Ansatt
     CONSTRAINT AvdelingFK FOREIGN KEY (avdeling) REFERENCES Avdeling (id) -- ny i iterasjon 3
 );
 
+-- Prosjekt tabell
+CREATE TABLE Prosjekt
+(
+    id          SERIAL PRIMARY KEY,
+    navn        VARCHAR(20) NOT NULL,
+    beskrivelse TEXT
+);
+
 -- Koblingstabell for Prosjekt-Ansatt, inspirasjon hentet fra f5_eks3a
 CREATE TABLE Timetabell
 (
@@ -61,7 +69,8 @@ ALTER TABLE Avdeling
 -- test avdeling
 INSERT INTO Avdeling
     (navn, avdelingsleder)
-VALUES ('Beste avdeling', 1);
+VALUES ('Beste avdeling', 1),
+       ('Værste avdeling', 1);
 
 -- test ansatte
 INSERT INTO Ansatt(brukernavn, fornavn, etternavn, ansettelsesdato, stilling, maanedslonn, avdeling)
@@ -69,16 +78,27 @@ VALUES ('bjhe', 'Bjørnar', 'Helgeland', '2021-08-15', 'code-monkey', 30000, 2),
        ('krbe', 'Kristian', 'Bell', '2021-08-15', 'maskot', 25000, 2),
        ('stsa', 'Storm', 'Sangolt', '2021-08-15', '"var tilstede"', 50000, 2);
 
+-- test prosjekt
+INSERT INTO Prosjekt
+    (navn, beskrivelse)
+VALUES ('bake boller',
+        'I dette prosjektet e planen å starte en operasjon hvor vi begynner å tenke på å se på muligheten å kanskje begynne å starte å tenke på om det kan være mulig å begynne å vurdere om vi skal lage boller');
+
+
 -- oppdater avdelingsleder i test avdeling til en av test ansatte
 UPDATE Avdeling
 SET avdelingsleder = 2
 WHERE navn = 'Beste avdeling';
 
+UPDATE Avdeling
+SET avdelingsleder = 3
+WHERE navn = 'Værste avdeling';
+
 -- test timeregistreringer
 INSERT INTO Timetabell(ansattid, prosjektid, timer, rolle)
-VALUES (1, 1, 200, 'Hoved-etterforsker'),
-       (2, 1, 4, 'Sitter der og e fin'),
-       (3, 1, 1, 'Møtte opp ene dagen');
+VALUES (2, 1, 200, 'Hoved-etterforsker'),
+       (3, 1, 4, 'Sitter der og e fin'),
+       (4, 1, 1, 'Møtte opp ene dagen');
 
 -- skriv ut alle ansatte
 SELECT *
@@ -88,3 +108,8 @@ FROM Ansatt;
 SELECT *
 FROM Avdeling
          INNER JOIN Ansatt A ON A.id = Avdeling.avdelingsleder;
+
+-- Skriv ut alle prosjekter og dens timeregistrering
+SELECT *
+FROM Prosjekt
+         INNER JOIN Timetabell T ON Prosjekt.id = T.prosjektid

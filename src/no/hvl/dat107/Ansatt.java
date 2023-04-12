@@ -3,6 +3,7 @@ package no.hvl.dat107;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(schema = "OBLIG3")
@@ -22,6 +23,9 @@ public class Ansatt {
 	@JoinColumn(name = "avdeling") // Dette er navnet på kolonnen i ansatt tabellen
 	private Avdeling avdeling; // ny i iterasjon 3
 
+	@OneToMany(mappedBy = "ansatt")
+	private List<Timetabell> timeregistrering;
+
 	public int getId() {
 		return id;
 	}
@@ -38,8 +42,7 @@ public class Ansatt {
 	 * @param stilling        Stilling
 	 * @param maanedslonn     Lønn
 	 */
-	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling,
-	              int maanedslonn, Avdeling avdeling) {
+	public Ansatt(String fornavn, String etternavn, LocalDate ansettelsesdato, String stilling, int maanedslonn, Avdeling avdeling) {
 		this.brukernavn      = genererBrukernavn(fornavn, etternavn);
 		this.fornavn         = fornavn;
 		this.etternavn       = etternavn;
@@ -87,15 +90,15 @@ public class Ansatt {
 			default -> nyttBrukernavn.append(etternavn.charAt(0))
 			                         .append(etternavn.charAt(1));
 		}
-		return nyttBrukernavn.toString().toLowerCase();
+		return nyttBrukernavn.toString()
+		                     .toLowerCase();
 	}
 
 
 	@Override
 	public String toString() {
-		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + id + "\n\tBrukernavn:\t" + brukernavn +
-		       "\n\t" + "Ansettelsdato:\t" + ansettelsesdato + "\n\t" + "Stiling:\t" + stilling +
-		       "\n\tMånedslønn:\t" + maanedslonn + "\n\tAvdeling:\t" + avdeling.getNavn();
+		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + id + "\n\tBrukernavn:\t" + brukernavn + "\n\t" + "Ansettelsdato:\t" +
+		       ansettelsesdato + "\n\t" + "Stiling:\t" + stilling + "\n\tMånedslønn:\t" + maanedslonn + "\n\tAvdeling:\t" + avdeling.getNavn();
 	}
 
 	public void setStilling(String stilling) {
