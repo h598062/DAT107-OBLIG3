@@ -312,8 +312,8 @@ public class AnsattDAO {
 	public void oppdaterAvdeling(int ansattid, int avdelingid) {
 		EntityManager     em              = emf.createEntityManager();
 		EntityTransaction tx              = em.getTransaction();
-		Ansatt   oppdatertAnsatt = null;
-		Avdeling nyAvdeling      = null;
+		Ansatt            oppdatertAnsatt = null;
+		Avdeling          nyAvdeling      = null;
 		try {
 			tx.begin();
 			oppdatertAnsatt = em.find(Ansatt.class, ansattid); // Finne rad som skal oppdateres
@@ -403,6 +403,32 @@ public class AnsattDAO {
 			if (tx.isActive()) {
 				tx.rollback();
 			}
+		}
+	}
+
+	/**
+	 * Legger til timer på en ansatt i et prosjekt
+	 *
+	 * @param ansattId   id til ansatt
+	 * @param prosjektId id til prosjektet
+	 * @param timer      antall timer som skal legges til
+	 */
+	public void leggTilTimer(int ansattId, int prosjektId, String timer) {
+		EntityManager      em = emf.createEntityManager();
+		EntityTransaction  tx = em.getTransaction();
+		Prosjektdeltagelse pd = null;
+		try {
+			tx.begin();
+			// bruker ProsjektdeltagelsePK som primarykey siden det er derfor vi har den
+			pd = em.find(Prosjektdeltagelse.class, new ProsjektdeltagelsePK(ansattId, prosjektId));
+			pd.leggTilTimer(timer);
+			tx.commit();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			em.close();
 		}
 	}
 }

@@ -1,7 +1,11 @@
 package no.hvl.dat107;
 
-import no.hvl.dat107.dao.*;
-import no.hvl.dat107.entity.*;
+import no.hvl.dat107.dao.AnsattDAO;
+import no.hvl.dat107.dao.AvdelingDAO;
+import no.hvl.dat107.dao.ProsjektDAO;
+import no.hvl.dat107.entity.Ansatt;
+import no.hvl.dat107.entity.Avdeling;
+import no.hvl.dat107.entity.Prosjekt;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -13,6 +17,8 @@ public class Main {
 	private static final Scanner     scanner     = new Scanner(System.in);
 	private static final AnsattDAO   ansattDAO   = new AnsattDAO();
 	private static final AvdelingDAO avdelingDAO = new AvdelingDAO();
+
+	private static final ProsjektDAO prosjektDAO = new ProsjektDAO();
 
 	public static void main(String[] args) {
 
@@ -62,25 +68,172 @@ public class Main {
 			}
 			System.out.println();
 		}
-		avslutt();
+		System.out.println("Avbrutt av bruker");
 	}
 
+	/**
+	 * Utskrift av info om prosjekt, inkl. liste av deltagere med rolle og timer, og totalt timetall for prosjektet
+	 */
 	private static void skrivUtProsjektInfo() {
 
 	}
 
+	/**
+	 * Føre timer for en ansatt på et prosjekt
+	 */
 	private static void oppdatereTimerForProsjektDeltagelse() {
+		System.out.println("Veiviser for å legge til flere timer for en ansatt på et prosjekt");
+		System.out.print("Skriv inn id til den ansatte: ");
+		String input = scanner.nextLine();
+		int    aid   = -1;
+		while (aid < 2) { // id 1 er testbruker og skal ignoreres
+			try {
+				aid = Integer.parseInt(input);
+			} catch (NumberFormatException e) {
+				System.out.println("Det du har skrevet inn inneholder annet enn tall, prøv igjen: " + input);
+			}
+			if (aid < 2) {
+				System.out.println("feil ansatt id");
+			}
+		}
+		System.out.print("Skriv inn id til prosjektet: ");
+		String input2 = scanner.nextLine();
+		int    pid    = -1;
+		while (pid < 1) {
+			try {
+				pid = Integer.parseInt(input2);
+			} catch (NumberFormatException e) {
+				System.out.println("Det du har skrevet inn inneholder annet enn tall, prøv igjen: " + input2);
+			}
+			if (pid < 2) {
+				System.out.println("feil prosjekt id");
+			}
+		}
+		System.out.println("Skriv inn antall timer som skal legges til." +
+		                   "\nDette må være på formatet h.h, altså hvis en ansatt har brukt 2t 30 min så skriver du 2.5");
+		System.out.print("Antall timer: ");
+		String timer = scanner.nextLine();
+		while (!validerTimerForProsjektdeltagelse(timer)) {
+			System.out.println("Feil i format for timer");
+			System.out.print("Prøv igjen: ");
+			timer = scanner.nextLine();
+		}
 
+		ansattDAO.leggTilTimer(aid, pid, timer);
 	}
 
+	/**
+	 * Registrere prosjektdeltagelse (ansatt med rolle i prosjekt)
+	 */
 	private static void registrerProsjektDeltagelse() {
+		System.out.println("Veiviser for å registere en ny prosjektdeltagelse for en ansatt");
+		System.out.print("Skriv inn id til den ansatte: ");
+		String input = scanner.nextLine();
+		int    aid   = -1;
+		while (aid < 2) { // id 1 er testbruker og skal ignoreres
+			try {
+				aid = Integer.parseInt(input);
+			} catch (NumberFormatException e) {
+				System.out.println("Det du har skrevet inn inneholder annet enn tall, prøv igjen: " + input);
+			}
+			if (aid < 2) {
+				System.out.println("feil ansatt id");
+			}
+		}
+		System.out.print("Skriv inn id til prosjektet: ");
+		String input2 = scanner.nextLine();
+		int    pid    = -1;
+		while (pid < 1) {
+			try {
+				pid = Integer.parseInt(input2);
+			} catch (NumberFormatException e) {
+				System.out.println("Det du har skrevet inn inneholder annet enn tall, prøv igjen: " + input2);
+			}
+			if (pid < 2) {
+				System.out.println("feil prosjekt id");
+			}
+		}
+		System.out.print("Skriv inn rollen den ansatte har på prosjektet: ");
+		String rolle = scanner.nextLine();
+		while (rolle.length() < 1) {
+			System.out.println("Rolle må være på minst et tegn");
+			System.out.print("Prøv igjen: ");
+			rolle = scanner.nextLine();
+		}
+		System.out.println("Skriv inn antall timer den ansatte har brukt på prosjektet så langt." +
+		                   "\nDette må være på formatet h.h, altså hvis en ansatt har brukt 2t 30 min så skriver du 2.5");
+		System.out.print("Antall timer: ");
+		String timer = scanner.nextLine();
+		while (!validerTimerForProsjektdeltagelse(timer)) {
+			System.out.println("Feil i format for timer");
+			System.out.print("Prøv igjen: ");
+			timer = scanner.nextLine();
+		}
 
+		ansattDAO.registrerProsjektdeltagelse(aid, pid, rolle, timer);
 	}
 
+	/**
+	 * Hjelpemetode for å validere timestring for prosjektdeltagelse konstruktør.<br>
+	 * Det er nødvendig med timer som en string for å unngå floatinfpoint feil ved konvertering
+	 *
+	 * @param timer String på format h.h, f.eks "2.5" timer aka. 2t 30min, eller "2" aka 2t
+	 *
+	 * @return True hvis input streng er ok
+	 */
+	private static boolean validerTimerForProsjektdeltagelse(String timer) {
+		if (timer == null || timer.length() < 1) {
+			return false;
+		}
+
+		if (timer.contains(".")) {
+			String[] parts = timer.split("\\.");
+			if (parts.length != 2) {
+				return false;
+			}
+			try {
+				Integer.parseInt(parts[0]);
+				Integer.parseInt(parts[1]);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		} else {
+			try {
+				Integer.parseInt(timer);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Legge inn et nytt prosjekt
+	 */
 	private static void leggeTilNyttProsjekt() {
 
+		System.out.println("Veiviser for å legge til nytt prosjekt");
+		System.out.print("Skriv inn navn på prosjektet: ");
+		String navn = scanner.nextLine();
+		while (navn.length() < 1 || navn.length() > 20) {
+			System.out.println("Navnet må være på minst ett tegn, og maks 20 tegn");
+			System.out.print("Prøv igjen: ");
+			navn = scanner.nextLine();
+		}
+		System.out.print("Skriv inn beskrivelse til prosjektet: ");
+		String beskrivelse = scanner.nextLine();
+		while (beskrivelse.length() < 1) {
+			System.out.println("Beskrivelse må være på minst ett tegn");
+			System.out.print("Prøv igjen: ");
+			beskrivelse = scanner.nextLine();
+		}
+		Prosjekt p = new Prosjekt(navn, beskrivelse);
+		prosjektDAO.leggTilProsjekt(p);
 	}
 
+	/**
+	 * Skriver ut alle avdelinger
+	 */
 	private static void skrivUtAlleAvdelinger() {
 		List<Avdeling> avdelinger = avdelingDAO.finnAlleAvdelinger();
 		System.out.println("Liste over alle avdelinger: ");
@@ -90,6 +243,11 @@ public class Main {
 		System.out.println();
 	}
 
+	/**
+	 * Legge inn en ny avdeling. NB! Siden en avdeling MÅ ha en sjef, må man velge blant en av de allerede
+	 * eksisterende ansatte (som da jobber i en annen avdeling). Den ansatte som blir sjef i den nye
+	 * avdelingen skal automatisk overføres til avdelingen vedkommende blir sjef for.
+	 */
 	private static void leggeTilNyAvdeling() {
 		System.out.print("Skriv inn navnet på den nye avdelingen: ");
 		String skrivInn = scanner.nextLine();
@@ -124,6 +282,9 @@ public class Main {
 		ansattDAO.oppdaterAvdeling(a.getId(), nyAvd.getId());
 	}
 
+	/**
+	 * Oppdatere hvilken avdeling en ansatt jobber på. Man kan ikke bytte avdeling hvis man er sjef!
+	 */
 	private static void oppdaterEnAnsattSinAvdeling() {
 		System.out.print("Skriv inn en ansatt sin id: ");
 		String skrivInn    = scanner.nextLine();
@@ -168,6 +329,10 @@ public class Main {
 		ansattDAO.oppdaterAvdeling(skrivInnInt, avd.getId());
 	}
 
+	/**
+	 * Søke etter avdeling på avdeling-id<br>
+	 * Utlisting av alle ansatte på en avdeling inkl. utheving av hvem som er sjef
+	 */
 	private static void sokAvdelingMedId() {
 		System.out.print("Skriv inn avdelingsid : ");
 		String skrivInn = scanner.nextLine();
@@ -182,11 +347,9 @@ public class Main {
 		}
 	}
 
-	private static void avslutt() {
-		System.out.println("Avbrutt av bruker");
-		System.exit(0);
-	}
-
+	/**
+	 * Legge inn en ny ansatt må nå også angi hvilken avdeling vedkommende skal jobbe på
+	 */
 	private static void leggeTilNyAnsatt() {
 		System.out.println("Dette er en veiviser for å opprette en ny bruker," + " skriv opplysningene du får fra 1881!");
 		System.out.print("Skriv inn Fornavn: ");
@@ -282,6 +445,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Oppdatere en ansatt sin stilling og/eller lønn
+	 */
 	private static void oppdatereEnAnsattSinStillingEllerLonn() {
 		System.out.println("Ønsker du å oppdatere Stilling eller Lønn?");
 		System.out.println("\t0. - Gå tilbake\n\t1. - Stilling\n\t2. - Lønn");
@@ -347,6 +513,9 @@ public class Main {
 
 	}
 
+	/**
+	 * Utlisting av alle ansatte
+	 */
 	private static void skrivUtAlleAnsatte() {
 		List<Ansatt> al = ansattDAO.finnAlleAnsatte();
 		System.out.println("Liste over alle ansatte: ");
@@ -356,6 +525,9 @@ public class Main {
 		System.out.println();
 	}
 
+	/**
+	 * Søke etter ansatt på brukernavn (initialer)
+	 */
 	private static void sokMedBrukernavn() {
 		System.out.println("Skriv inn brukernavnet til den ansatte du ønsker å finne, eller trykk enter uten å skrive inn for å avslutte ansattsøk");
 
@@ -379,6 +551,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Søke etter ansatt på ansatt-id
+	 */
 	private static void sokMedAnsattId() {
 
 		System.out.print("Skriv inn ansattnummer : ");

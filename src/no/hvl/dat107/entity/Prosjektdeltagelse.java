@@ -86,4 +86,13 @@ public class Prosjektdeltagelse {
 	public BigDecimal getTimer() {
 		return timer;
 	}
+
+	/**
+	 * Legger til timer til denne prosjektdeltagelsen
+	 * @param timer Riktig formatert string timer, se validerTimerForProsjektdeltagelse i Main
+	 */
+	public void leggTilTimer(String timer) {
+		BigDecimal bdtimer = new BigDecimal(timer);
+		this.timer = this.timer.add(bdtimer);
+	}
 }
