@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import no.hvl.dat107.*;
 import no.hvl.dat107.entity.*;
 
+import java.util.List;
+
 public class ProsjektDAO {
 
 	private final EntityManagerFactory emf;
@@ -43,6 +45,14 @@ public class ProsjektDAO {
 	public Prosjekt finnProsjektMedId(int prosjektId) {
 		try (EntityManager em = emf.createEntityManager()) {
 			return em.find(Prosjekt.class, prosjektId);
+		}
+	}
+
+	public List<Prosjekt> finnAlleProsjekter() {
+		try (EntityManager em = emf.createEntityManager()) {
+			String             ql = "select p from Prosjekt as p";
+			TypedQuery<Prosjekt> q  = em.createQuery(ql, Prosjekt.class);
+			return q.getResultList();
 		}
 	}
 }

@@ -23,8 +23,9 @@ public class Ansatt {
 	@JoinColumn(name = "avdeling") // Dette er navnet på kolonnen i ansatt tabellen
 	private Avdeling avdeling; // ny i iterasjon 3
 
+	// liste linket mot samletabell prosjektdeltagelser
 	@OneToMany(mappedBy = "ansatt")
-	private List<Prosjektdeltagelse> deltagelser;
+	private List<Prosjektdeltagelse> deltagelser; // ny i iterasjon 5
 
 	public Ansatt() {
 	}
@@ -48,9 +49,6 @@ public class Ansatt {
 		this.avdeling        = avdeling; // todo må fikse
 	}
 
-	public int getId() {
-		return id;
-	}
 
 	/**
 	 * Intern metode for å generere et brukernavn på 4 tegn.
@@ -94,6 +92,10 @@ public class Ansatt {
 	public String toString() {
 		return fornavn + " " + etternavn + "\n\tAnsatt ID:\t" + id + "\n\tBrukernavn:\t" + brukernavn + "\n\t" + "Ansettelsdato:\t" +
 		       ansettelsesdato + "\n\t" + "Stiling:\t" + stilling + "\n\tMånedslønn:\t" + maanedslonn + "\n\tAvdeling:\t" + avdeling.getNavn();
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getBrukernavn() {
@@ -163,6 +165,11 @@ public class Ansatt {
 		return deltagelser;
 	}
 
+	/**
+	 * Registrerer en ny deltagelse i denne ansatte sin liste<br>
+	 * OBS!!! Denne metoden antar at prosjektdeltagelsen er gyldig og linket mot riktig ansatt
+	 * @param pd Ny prosjektdeltagelse
+	 */
 	public void registrerDeltagelse(Prosjektdeltagelse pd) {
 		deltagelser.add(pd);
 	}

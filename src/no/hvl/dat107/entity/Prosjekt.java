@@ -15,8 +15,9 @@ public class Prosjekt {
 	private String navn;
 	private String beskrivelse;
 
+	// liste linket mot samletabell prosjektdeltagelser
 	@OneToMany(mappedBy = "prosjekt")
-	private List<Prosjektdeltagelse> deltagelser;
+	private List<Prosjektdeltagelse> deltagelser; // iterasjon 5
 
 	public Prosjekt() {
 	}
@@ -36,7 +37,7 @@ public class Prosjekt {
 		StringBuilder ny = new StringBuilder();
 		for (int i = 0; i < ord.length; i++) {
 			ny.append(ord[i]).append(" ");
-			if (i != 0 && i % 8 == 0) {
+			if (i != 0 && i % 15 == 0) {
 				ny.append("\n\t");
 			}
 		}
@@ -86,6 +87,11 @@ public class Prosjekt {
 		return deltagelser;
 	}
 
+	/**
+	 * Registrerer en ny deltagelse i dette prosjektet sin liste<br>
+	 * OBS!!! Denne metoden antar at prosjektdeltagelsen er gyldig og linket mot riktig prosjekt
+	 * @param pd Ny prosjektdeltagelse
+	 */
 	public void registrerDeltagelse(Prosjektdeltagelse pd) {
 		deltagelser.add(pd);
 	}

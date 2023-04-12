@@ -56,11 +56,11 @@ CREATE TABLE Prosjektdeltagelse
 
 -- default tmp avdeling
 INSERT INTO Avdeling(navn, avdelingsleder)
-VALUES ('default', 1);
+VALUES ('DoNotUse', 1);
 
 -- default tmp ansatt
 INSERT INTO Ansatt(brukernavn, fornavn, etternavn, ansettelsesdato, stilling, maanedslonn, avdeling)
-VALUES ('tmp', 'DoNotUse', 'DoNotUse', '2023-04-01', 'default', 1, 1);
+VALUES ('tmp', 'DoNotUse', 'DoNotUse', '2023-04-01', 'DoNotUse', 1, 1);
 
 -- lag referanse fra avdelig til ansatt
 ALTER TABLE Avdeling
@@ -75,7 +75,7 @@ VALUES ('Beste avdeling', 1),
 -- test ansatte
 INSERT INTO Ansatt(brukernavn, fornavn, etternavn, ansettelsesdato, stilling, maanedslonn, avdeling)
 VALUES ('bjhe', 'Bjørnar', 'Helgeland', '2021-08-15', 'code-monkey', 30000, 2),
-       ('krbe', 'Kristian', 'Bell', '2021-08-15', 'maskot', 25000, 2),
+       ('krbe', 'Kristian', 'Bell', '2021-08-15', 'maskot', 25000, 3),
        ('stsa', 'Storm', 'Sangolt', '2021-08-15', '"var tilstede"', 50000, 2);
 
 -- test prosjekt

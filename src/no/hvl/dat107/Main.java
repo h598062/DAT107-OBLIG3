@@ -29,21 +29,22 @@ public class Main {
 		while (!avslutt) {
 			System.out.println("Hva ønsker du å søke etter?");
 			System.out.println("""
-			                    0. - Avslutt
-			                    1. - Søke etter ansatt på ansatt-id
-			                    2. - Søke etter ansatt på brukernavn (initialer)
-			                    3. - Utlisting av alle ansatte
-			                    4. - Oppdatere en ansatt sin stilling og/eller lønn
-			                    5. - Legge inn en ny ansatt
-			                    6. - Søk etter avdeling med id
-			                    7. - Liste ut alle avdelinger
-			                    8. - Oppdatere en ansatt sin avdeling
-			                    9. - Legge til ny avdeling
-			                   10. - Legg til et nytt prosjekt
-			                   11. - Registrer en ny prosjektdeltagelse for en ansatt på et prosjekt
-			                   12. - Oppdater timer for en ansatt på et prosjekt (føre timer)
-			                   13. - Skriv ut info om et prosjekt""");
-			System.out.print("Skriv inn et tall fra 0-13: ");
+                                0. - Avslutt
+                                1. - Søke etter ansatt på ansatt-id
+                                2. - Søke etter ansatt på brukernavn (initialer)
+                                3. - Liste ut alle ansatte
+                                4. - Oppdatere en ansatt sin stilling og/eller lønn
+                                5. - Legge inn en ny ansatt
+                                6. - Søk etter avdeling med id
+                                7. - Liste ut alle avdelinger
+                                8. - Oppdatere en ansatt sin avdeling
+                                9. - Legge til ny avdeling
+                               10. - Legg til et nytt prosjekt
+                               11. - Registrer en ny prosjektdeltagelse for en ansatt på et prosjekt
+                               12. - Oppdater timer for en ansatt på et prosjekt (føre timer)
+                               13. - Skriv ut info om et prosjekt
+                               14. - Liste ut alle prosjekter""");
+			System.out.print("Skriv inn et tall fra 0-14: ");
 			String valg = scanner.nextLine();
 
 			try {
@@ -63,6 +64,7 @@ public class Main {
 					case 11 -> registrerProsjektDeltagelse();
 					case 12 -> oppdatereTimerForProsjektDeltagelse();
 					case 13 -> skrivUtProsjektInfo();
+					case 14 -> skrivUtAlleProsjekter();
 					default -> System.out.println("Ingen funksjoner er registrert på menyvalg: " + valgInt);
 				}
 			} catch (NumberFormatException e) {
@@ -71,6 +73,19 @@ public class Main {
 			System.out.println();
 		}
 		System.out.println("Avbrutt av bruker");
+	}
+
+	/**
+	 * Skriver ut en liste med alle prosjekter<br>
+	 * Denne inkluderer kun prosjekt navn, id og beskrivelse<br>
+	 * For å få mer info må en bruke skrivUtProsjektInfo()
+	 */
+	private static void skrivUtAlleProsjekter() {
+		System.out.println("Denne funksjonen skriver ut navn, id og beskrivelse for alle registrerte prosjekter.\nFor mer info, bruk menyvalg 13");
+		List<Prosjekt> prosjekter = prosjektDAO.finnAlleProsjekter();
+		for (Prosjekt prosjekt : prosjekter) {
+			System.out.println(prosjekt);
+		}
 	}
 
 	/**
@@ -139,6 +154,7 @@ public class Main {
 		}
 
 		ansattDAO.leggTilTimer(aid, pid, timer);
+		System.out.println("Oppdatert timer for ansatt");
 	}
 
 	/**
@@ -161,6 +177,7 @@ public class Main {
 		}
 
 		ansattDAO.registrerProsjektdeltagelse(aid, pid, rolle, timer);
+		System.out.println("Registrert ny prosjektdeltagelse");
 	}
 
 	/**
@@ -270,6 +287,7 @@ public class Main {
 				System.out.println(i + ":\n" + a);
 			}
 		}
+		System.out.print("Skriv inn ønsket avdeling: ");
 		String input    = scanner.nextLine();
 		int    inputInt = -1;
 		while (inputInt < 0 || inputInt >= ansatte.size()) {
@@ -396,32 +414,29 @@ public class Main {
 
 		//		Sender ny ansatt til metode i AnsattDAO for å bli opprettet
 		if (alleGyldig) {
-			System.out.println("Velg hvilken avdeling den anssatte skal jobbe i:");
+			System.out.println("Velg hvilken avdeling den ansatte skal jobbe i:");
 			List<Avdeling> avdelinger = avdelingDAO.finnAlleAvdelinger();
 			for (int i = 0; i < avdelinger.size(); i++) {
 				System.out.println(i + ". - " + avdelinger.get(i)
 				                                          .getNavn() + " - id: " + avdelinger.get(i)
 				                                                                             .getId());
 			}
-			System.out.print("Skriv inn avdelingsid : ");
-			int skrivInnInt = -1;
-			while (skrivInnInt < 0 || skrivInnInt >= avdelinger.size()) {
-				String skrivInn = scanner.nextLine();
+			System.out.print("Velg en avdeling: ");
+			int inputInt = -1;
+			while (inputInt < 0 || inputInt >= avdelinger.size()) {
+				String input = scanner.nextLine();
 				try {
-					skrivInnInt = Integer.parseInt(skrivInn);
-
-					System.out.println(avdelingDAO.finnAvdelingMedID(skrivInnInt));
-					System.out.println();
-
+					inputInt = Integer.parseInt(input);
 				} catch (NumberFormatException e) {
-					System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + skrivInn);
+					System.out.println("Dette innholder noe anna en kun tal, prøv noko anno: " + input);
 					System.out.println("Prøv igjen: ");
 				}
 			}
-			Avdeling avd      = avdelinger.get(skrivInnInt);
+			Avdeling avd      = avdelinger.get(inputInt);
 			Ansatt   nyAnsatt = new Ansatt(fornavn, etternavn, LocalDate.parse(ansettelsesdato), stilling, lonnint, avd);
 			// Legg til en ansatt med riktige parameter
 			ansattDAO.leggTilNyAnsatt(nyAnsatt);
+			System.out.println("Ny ansatt:\n" + nyAnsatt + "\ner lagt inn i avdeling: " + avd.getNavn() + " - id: " + avd.getId());
 		}
 
 	}

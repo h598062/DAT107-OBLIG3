@@ -44,7 +44,7 @@ public class Prosjektdeltagelse {
 
 	@Override
 	public String toString() {
-		return ansatt + "\n" + prosjekt;
+		return ansatt + "\n" + prosjekt + "\nRolle: " + rolle + "\nTimer: " + timer.toString();
 	}
 
 	@Override
