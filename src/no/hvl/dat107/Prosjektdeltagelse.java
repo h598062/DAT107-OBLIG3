@@ -10,23 +10,34 @@ import java.math.BigDecimal;
 public class Prosjektdeltagelse {
 
 	@Id
-    @ManyToOne
-    @JoinColumn(name="ansattid")
-    private Ansatt ansatt;
+	@ManyToOne
+	@JoinColumn(name = "ansattid")
+	private Ansatt ansatt;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name="prosjektid")
-    private Prosjekt prosjekt;
+	@Id
+	@ManyToOne
+	@JoinColumn(name = "prosjektid")
+	private Prosjekt prosjekt;
 
-	private String rolle;
+	private String     rolle;
 	private BigDecimal timer;
 
-	public Prosjektdeltagelse() {}
+	public Prosjektdeltagelse() {
+	}
 
-	public Prosjektdeltagelse(Ansatt a, Prosjekt p) {
-		this.ansatt = a;
+	/**
+	 * Oppretter en ny prosjektdeltagelse og linker den mot et prosjekt og en ansatt
+	 *
+	 * @param a     ansatt som jobber i prosjektet
+	 * @param p     prosjektet den ansatte skal jobbe i
+	 * @param rolle rollen den ansatte har i prosjektet
+	 * @param timer tid som skal legges inn på den ansatte. Dette oppgis som en string, f.eks. "1.5". Dette er pga. å unngå floting point feil.
+	 */
+	public Prosjektdeltagelse(Ansatt a, Prosjekt p, String rolle, String timer) {
+		this.ansatt   = a;
 		this.prosjekt = p;
+		this.rolle    = rolle;
+		this.timer    = new BigDecimal(timer);
 		a.registrerDeltagelse(this);
 		p.registrerDeltagelse(this);
 	}

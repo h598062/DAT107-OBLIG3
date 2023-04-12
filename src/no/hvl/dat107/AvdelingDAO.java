@@ -40,6 +40,11 @@ public class AvdelingDAO {
 		}
 	}
 
+	/**
+	 * Legger til en ny avdeling
+	 *
+	 * @param avdeling den nye avdelinger
+	 */
 	public void leggTilAvdeling(Avdeling avdeling) {
 		EntityManager     em = emf.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -56,6 +61,13 @@ public class AvdelingDAO {
 		}
 	}
 
+	/**
+	 * Metode for å sjekke om en gitt ansatt er avdelingsleder for en avdeling
+	 *
+	 * @param a den ansatte som skal sjekkes
+	 *
+	 * @return true om den ansatte er leder for en avdeling
+	 */
 	public boolean erAvdelingsleder(Ansatt a) {
 		List<Avdeling> avds = finnAlleAvdelinger();
 		for (Avdeling avd : avds) {

@@ -137,8 +137,8 @@ public class AnsattDAO {
 	public List<Ansatt> finnAnsatteMedEtternavn(String etternavn) {
 
 		try (EntityManager em = emf.createEntityManager()) {
-			String ql = "select a from Ansatt as a where a.etternavn = '" + etternavn + "' order by a.etternavn";
-			TypedQuery<Ansatt> q = em.createQuery(ql, Ansatt.class);
+			String             ql = "select a from Ansatt as a where a.etternavn = '" + etternavn + "' order by a.etternavn";
+			TypedQuery<Ansatt> q  = em.createQuery(ql, Ansatt.class);
 			return q.getResultList();
 		}
 	}
@@ -301,6 +301,12 @@ public class AnsattDAO {
 		return nyttBrukernavn;
 	}
 
+	/**
+	 * Oppdaterer avdelingen til en ansatt
+	 *
+	 * @param ansattid   id til ansatte som skal oppdateres
+	 * @param avdelingid id til den nye avdelingen
+	 */
 	public void oppdaterAvdeling(int ansattid, int avdelingid) {
 		EntityManager     em              = emf.createEntityManager();
 		EntityTransaction tx              = em.getTransaction();
@@ -321,7 +327,27 @@ public class AnsattDAO {
 		}
 	}
 
-	public void registrerProsjektdeltagelse(int ansattId, int prosjektId) {
+	/**
+	 * Registrerer en ny prosjektdeltagelse<br>
+	 * Denne blir registrert med default 0 timer.
+	 *
+	 * @param ansattId   ansatt som jobber i prosjektet
+	 * @param prosjektId prosjektet den ansatte skal jobbe i
+	 * @param rolle      rollen den ansatte har i prosjektet
+	 */
+	public void registrerProsjektdeltagelse(int ansattId, int prosjektId, String rolle) {
+		registrerProsjektdeltagelse(ansattId, prosjektId, rolle, "0");
+	}
+
+	/**
+	 * Registrerer en ny prosjektdeltagelse
+	 *
+	 * @param ansattId   ansatt som jobber i prosjektet
+	 * @param prosjektId prosjektet den ansatte skal jobbe i
+	 * @param rolle      rollen den ansatte har i prosjektet
+	 * @param timer      tid som skal legges inn på den ansatte. Dette oppgis som en string, f.eks. "1.5". Dette er pga. å unngå floting point feil.
+	 */
+	public void registrerProsjektdeltagelse(int ansattId, int prosjektId, String rolle, String timer) {
 
 		EntityManager     em = emf.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -331,7 +357,7 @@ public class AnsattDAO {
 			Ansatt   a = em.find(Ansatt.class, ansattId);
 			Prosjekt p = em.find(Prosjekt.class, prosjektId);
 
-			Prosjektdeltagelse pd = new Prosjektdeltagelse(a, p);
+			Prosjektdeltagelse pd = new Prosjektdeltagelse(a, p, rolle, timer);
 
 			em.persist(pd);
 
@@ -345,6 +371,12 @@ public class AnsattDAO {
 
 	}
 
+	/**
+	 * Sletter en prosjektdeltagelse
+	 *
+	 * @param ansattId   id til den ansatte
+	 * @param prosjektId id til prosjektet
+	 */
 	public void slettProsjektdeltagelse(int ansattId, int prosjektId) {
 
 		EntityManager     em = emf.createEntityManager();
